@@ -1,0 +1,17 @@
+{
+    "extName": {
+      "message": "Side-by-Side",
+      "description": "Extension name"
+    },
+    "extDesc": {
+      "message": "Two sites, side-by-side",
+      "description": "Extension description"
+    },
+
+    "menuVertical": {
+        "message": "Open with top/bottom split"
+    },
+    "menuHorizontal": {
+        "message": "Open with left/right split"
+    }
+}
