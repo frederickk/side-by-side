@@ -2,9 +2,9 @@
     "manifest_version": 2,
     "name": "__MSG_extName__",
     "description": "__MSG_extDesc__",
-    "version": "0.0.10",
+    "version": "0.0.20",
     "default_locale": "en",
-   "icons": {
+    "icons": {
       "128": "icon-128.png",
       "48": "icon-48.png",
       "16": "icon-16-system.png"
