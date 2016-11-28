@@ -11,6 +11,16 @@ TODO: find solution to sites that don't allow "framing" (e.g. stackoverflow)
 
 TODO: support incognito mode (https://github.com/philc/vimium/issues/1544)
 
+TODO: inject menu-item into HTML context menu (e.g. for slide.google.com), target .goog-menu and insert div.goog-menuitem
+```html
+<div class="goog-menu goog-menu-noaccel goog-menu-noicon" style="user-select: none;overflow-y: auto;height: 544px;visibility: visible;left: 406px;top: 384px;box-sizing: border-box;width: 199px;/* display: none; */" id="cm-cell" role="menu" aria-haspopup="true" tabindex="-1">
+    <div class="goog-menuitem" name="cm-1" role="menuitem" id=":l4" style="user-select: none;">
+        <div class="goog-menuitem-content" style="user-select: none;">Cut</div>
+    </div>
+</div>
+```
+
+
 
 Installation
 -------------

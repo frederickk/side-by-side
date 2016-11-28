@@ -15,7 +15,7 @@
     "background": {
         "persistent": true,
         "scripts": [
-            "background.js"
+            "app/background.js"
         ]
     },
 

@@ -16,16 +16,15 @@
 // Properties
 //
 // ------------------------------------------------------------------------
-var prefix = '--sbs-';
+const prefix = '--sbs-';
+const container = document.getElementById('container');
+const swap = document.getElementById('swap');
+const ids = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 
-var container = document.getElementById('container');
-var swap = document.getElementById('swap');
+let frames = [];
 
-var ids = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
-var frames = [];
-
-var direction;
-var num = 0;
+let direction;
+let num = 0;
 
 
 
@@ -34,11 +33,25 @@ var num = 0;
 // Methods
 //
 // ------------------------------------------------------------------------
-function load(index, overwrite) {
-    var frame = document.getElementById('frame' + index);
-    var input = document.getElementById('input' + index);
+(function() {
+    direction = localStorage.getItem(prefix + 'direction');
 
-    var stored = localStorage.getItem(prefix + 'frame' + index);
+    add(direction);
+    add(direction);
+
+    Split(frames, {
+        gutterSize : 6,
+        cursor     : 'col-resize',
+        direction  : direction
+    });
+})();
+
+// ------------------------------------------------------------------------
+function load(index, overwrite) {
+    let frame = document.getElementById(`frame${index}`);
+    let input = document.getElementById(`input${index}`);
+    let stored = localStorage.getItem(`${prefix}frame${index}`);
+
     if (!overwrite) {
         input.value = (stored)
             ? stored
@@ -47,12 +60,12 @@ function load(index, overwrite) {
 
     if (!isValidURL(input.value)) {
         // assume that adding 'http://' solves the problem
-        input.value = 'http://' + input.value;
+        input.value = `http://${input.value}`;
         makeRequest('GET', input.value).then(function(response) {
             if (input.classList.contains('error')) {
                 input.classList.remove('error');
             }
-            localStorage.setItem(prefix + 'frame' + index, String(input.value));
+            localStorage.setItem(`${prefix}'frame'${index}`, String(input.value));
         }).catch(function(err) {
             input.classList.add('error');
         });
@@ -66,13 +79,13 @@ function load(index, overwrite) {
 
 // ------------------------------------------------------------------------
 function add(direction, id) {
-    var index = num;
-    var val = (id)
+    let index = num;
+    let val = (id)
         ? prefix + id
         : prefix + ids[index];
     frames.push('#' + val);
 
-    var frameContainer = document.createElement('div');
+    let frameContainer = document.createElement('div');
     frameContainer.id = val;
     frameContainer.classList.add('split');
     if (direction === 'vertical') {
@@ -82,13 +95,13 @@ function add(direction, id) {
         frameContainer.classList.add('split-horizontal');
     }
 
-    var inputContainer = document.createElement('div');
+    let inputContainer = document.createElement('div');
     inputContainer.classList.add('input-container');
     if (direction === 'vertical') {
         inputContainer.classList.add('vertical');
     }
     inputContainer.addEventListener('mousemove', function(event) {
-        var top = this.parentNode.getBoundingClientRect().top;
+        let top = this.parentNode.getBoundingClientRect().top;
         if (event.y < top + parseInt(window.getComputedStyle(this, null)['height']) * 0.5) {
             this.classList.add('show');
         }
@@ -97,7 +110,7 @@ function add(direction, id) {
         this.classList.remove('show');
     });
 
-    var input = document.createElement('input');
+    let input = document.createElement('input');
     input.type = 'text';
     input.id = input.name = 'input' + index;
     input.value = '';
@@ -109,14 +122,14 @@ function add(direction, id) {
         }
     });
     input.addEventListener('keypress', function(event) {
-        var key = event.which || event.keyCode;
+        let key = event.which || event.keyCode;
         if (key === 13) { // enter
             this.blur();
         }
     });
 
-    var frame = document.createElement('iframe');
-    frame.id = 'frame' + index;
+    let frame = document.createElement('iframe');
+    frame.id = `frame${index}`;
     frame.src = './blank.html';
 
     inputContainer.appendChild(input);
@@ -145,14 +158,14 @@ function swapDirection() {
     else {
         direction = 'vertical';
     }
-    localStorage.setItem(prefix + 'direction', direction);
+    localStorage.setItem(`${prefix}direction`, direction);
 
     return direction;
 }
 
 function isValidURL(str) {
     return validator.isURL(str, {
-        protocols              : ['http','https','ftp','file','localhost'],
+        protocols              : ['http', 'https', 'ftp', 'file', 'localhost'],
         require_protocol       : true,
         require_valid_protocol : true
     });
@@ -161,7 +174,7 @@ function isValidURL(str) {
 // http://stackoverflow.com/questions/30008114/how-do-i-promisify-native-xhr
 function makeRequest(method, url) {
     return new Promise(function(resolve, reject) {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open(method, url);
         xhr.onload = function() {
             if (this.status >= 200 && this.status < 300) {
@@ -190,20 +203,6 @@ function makeRequest(method, url) {
 //
 // Events
 //
-// ------------------------------------------------------------------------
-(function() {
-    direction = localStorage.getItem(prefix + 'direction');
-
-    add(direction);
-    add(direction);
-
-    Split(frames, {
-        gutterSize : 6,
-        cursor     : 'col-resize',
-        direction  : direction
-    });
-})();
-
 // ------------------------------------------------------------------------
 swap.addEventListener('click', function(event) {
     swapDirection();

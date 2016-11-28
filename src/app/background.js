@@ -16,22 +16,19 @@
 // Properties
 //
 // -----------------------------------------------------------------------------
-var prefix = '--sbs-';
-var urls = [
+const prefix = '--sbs-';
+const urls = [
     'file://*',
     'http://*/*',
     'https://*/*'
 ];
-var chromeUrl = [
+const chromeUrl = [
     'chrome-extension://*/*'
 ];
-
-var parent = chrome.contextMenus.create({
+const parent = chrome.contextMenus.create({
     title               : chrome.i18n.getMessage('extName'),
     documentUrlPatterns : urls
 });
-
-var menuItems = defaultMenus();
 
 
 
@@ -47,9 +44,9 @@ function open(direction, num) {
         highlighted   : true
     },
     function(tabs) {
-        localStorage.setItem(prefix + 'frame0',    String(tabs[0].url));
-        localStorage.setItem(prefix + 'direction', direction);
-        localStorage.setItem(prefix + 'number',    num);
+        localStorage.setItem(`${prefix}frame0`,    String(tabs[0].url));
+        localStorage.setItem(`${prefix}direction`, direction);
+        localStorage.setItem(`${prefix}number`,    num);
     });
     chrome.tabs.create({
         url: './index.html'
@@ -91,9 +88,10 @@ function defaultMenus() {
 // http://stackoverflow.com/questions/15532791/getting-around-x-frame-options-deny-in-a-chrome-extension
 chrome.webRequest.onHeadersReceived.addListener(
     function(info) {
-        var headers = info.responseHeaders;
-        for (var i = headers.length-1; i >= 0; --i) {
-            var header = headers[i].name.toLowerCase();
+        const headers = info.responseHeaders;
+        let header;
+        for (let i = headers.length-1; i >= 0; --i) {
+            header = headers[i].name.toLowerCase();
             if (header == 'x-frame-options' || header == 'frame-options') {
                 headers.splice(i, 1); // Remove header
             }
