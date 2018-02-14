@@ -1,177 +1,177 @@
-/*
+/**!
  * Side-by-Side
  * main.css
  *
  * Ken Frederick
  * ken.frederick@gmx.de
  *
- * http://kennethfrederick.de/
- * http://blog.kennethfrederick.de/
+ * http://kenfrederick.de/
+ * http://blog.kenfrederick.de/
  *
  */
 
+@import 'https://fonts.googleapis.com/css?family=Space+Mono';
 
-body,
-html {
-    margin: 0;
-    height: 100%;
-    font-family: 'Roboto Mono';
-    overflow: hidden;
+
+body {
+  font-family: 'Space Mono';
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
 }
 
 iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+  border: none;
+  height: 100%;
+  width: 100%;
 }
 
-/*
- *
- * Content
- *
- */
 #container {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    /*top: 50px;*/
+  align-items: stretch;
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  z-index: 0;
 }
 
-.input-container {
-    position: fixed;
-    width: inherit;
-    height: 21px;
-    /*background-color: rgba(0, 0, 0, 0.09);*/
-    background-color: #F2F2F2;
-    overflow: hidden;
-    opacity: 0;
-
-    -webkit-transition: all 150ms ease-in-out;
-    transition: all 150ms ease-in-out;
-}
-.input-container.vertical {
-    width: 100%;
-}
-.input-container.show {
-    height: 42px;
-    opacity: 1.0;
+#container.split-horizontal {
+  flex-direction: row;
 }
 
-input[type=text] {
-    width: 100%;
-    height: 18px;
-    padding: 12px;
-    font-family: 'Roboto Mono';
-    border: none;
-    background-color: transparent;
-
-    -webkit-transition: all 100ms ease-in-out;
-    transition: all 100ms ease-in-out;
-}
-input[type=text].error {
-    color: #780000;
-    background-color: #f00;
+#container.split-vertical {
+  flex-direction: column;
 }
 
-/*
- *
- * Split.js
- *
- */
+
+/* Split.js */
 .split {
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-
-    overflow: hidden;
+  align-self: stretch;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
 }
 
-.split.split-horizontal,
-.gutter.gutter-horizontal {
-    height: 100%;
-    float: left;
+.gutter {
+  background-color: #fff;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  position: relative;
+  transition: background-color 100ms ease-in-out;
+  z-index: 100;
+}
+
+.gutter:active {
+  background-color: rgba(0, 0, 30, .05);
 }
 
 /* top/bottom */
-.gutter.gutter-vertical {
-    width: 100% !important;
-    height: 4px !important;
-    cursor: row-resize;
-
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-image: url('../images/horizontal.png');
-
-    border-top: 1px rgba(0, 0, 0, 0.05) solid;
-    border-bottom: 1px rgba(0, 0, 0, 0.05) solid;
+.gutter-vertical {
+  background-image: url('../images/horizontal.png');
+  border-bottom: 1px rgba(0, 0, 30, .05) solid;
+  border-top: 1px rgba(0, 0, 30, .05) solid;
+  cursor: row-resize;
+  height: 4px;
+  width: 100%;
 }
 
 /* left/right */
-.gutter.gutter-horizontal {
-    width: 4px !important;
-    cursor: col-resize;
-
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-image: url('../images/vertical.png');
-
-    border-left: 1px rgba(0, 0, 0, 0.05) solid;
-    border-right: 1px rgba(0, 0, 0, 0.05) solid;
+.gutter-horizontal {
+  background-image: url('../images/vertical.png');
+  border-left: 1px rgba(0, 0, 30, .05) solid;
+  border-right: 1px rgba(0, 0, 30, .05) solid;
+  cursor: col-resize;
+  width: 4px;
 }
 
-
-/*
- *
- * Swap Button
- *
- */
-.circle {
-    position: fixed;
-    right: 15px;
-    bottom: 15px;
-    width: 45px;
-	height: 45px;
-
-    margin: auto;
-    text-align: center;
-
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.1);
-    opacity: 0.0;
-
-    z-index: 1000;
-
-    -webkit-transition: all 100ms ease-in-out;
-    transition: all 100ms ease-in-out;
-}
-.circle:hover {
-    opacity: 1.0;
-
-    transform-origin: center center;
-    animation-name: spin;
-	animation-duration: 300ms;
-	animation-iteration-count: 1;
-	animation-timing-function: ease-in-out;
-}
-.circle:active {
-    background-color: rgba(0, 0, 0, 0.2);
+/* Swap Button (FAB) */
+#swap-button {
+  -webkit-transition: all 120ms ease-in-out;
+  animation-duration: 120ms;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  /* background-color: rgba(0, 0, 30, .05); */
+  background-color: #fff;
+  background-image: url('../images/swap-arrow.svg');
+  background-position: 50%;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  bottom: 16px;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 30, .2);
+  cursor: pointer;
+  height: 52px;
+  margin: auto;
+  opacity: .01;
+  position: fixed;
+  right: 16px;
+  transition: all 120ms ease-in-out;
+  width: 52px;
+  z-index: 1000;
 }
 
-#swap-icon .stroke {
-    fill: none;
-    stroke: #fff;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-miterlimit: 10;
+#swap-button:hover {
+  animation-name: spin;
+  opacity: 1;
 }
+
+#swap-button:active {
+  background-color: #f2f2f2;
+}
+
 
 @keyframes spin {
 	from {
-        transform: rotate(0deg);
-    }
+    transform: rotate(0deg);
+  }
 	to {
-        transform: rotate(90deg);
-    }
+    transform: rotate(90deg);
+  }
+}
+
+
+/* URL inputs */
+.input-container {
+  -webkit-transition: all 120ms ease-in-out;
+  /*background-color: rgba(0, 0, 30, .09);*/
+  background-color: #F2F2F2;
+  height: 21px;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  opacity: .01;
+  transition: all 120ms ease-in-out;
+}
+
+.input-container.vertical {
+  width: 100%;
+}
+
+.input-container:hover,
+.input-container.show {
+  height: 42px;
+  opacity: 1;
+}
+
+input[type=text] {
+  -webkit-transition: all 120ms ease-in-out;
+  background-color: transparent;
+  border: none;
+  font-family: 'Space Mono';
+  height: 18px;
+  padding: 12px;
+  width: 100%;
+  transition: all 120ms ease-in-out;
+}
+
+input[type=text].error {
+  background-color: #f00;
+  color: #780000;
 }

@@ -8,14 +8,14 @@ echo $NAME
 find . -type f -name './src/*.DS_Store' -ls -delete
 
 if [ -f ./$NAME.crx ]; then
-    rm ./$NAME.crx
-    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --pack-extension=./src --pack-extension-key=./$NAME.pem
-    mv ./src.crx ./$NAME.crx
+  rm ./$NAME.crx
+  /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --pack-extension=./src --pack-extension-key=./$NAME.pem
+  mv ./src.crx ./$NAME.crx
 else
-    echo "$NAME doesn't exist, no stress packing it up now"
-    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --pack-extension=./src
-    mv ./src.crx ./$NAME.crx
-    mv ./src.pem ./$NAME.pem
+  echo "$NAME doesn't exist, no stress packing it up now"
+  /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --pack-extension=./src
+  mv ./src.crx ./$NAME.crx
+  mv ./src.pem ./$NAME.pem
 fi
 
 rm ./$NAME.zip

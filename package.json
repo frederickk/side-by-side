@@ -1,0 +1,17 @@
+{
+  "name": "side-by-side",
+  "version": "0.0.4",
+  "description": "Two sites, side-by-side",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./package.sh side-by-side"
+  },
+  "keywords": [
+    "chrome",
+    "extension",
+    "utility"
+  ],
+  "author": "Ken Frederick <ken.frederick@gmx.de>",
+  "license": "MIT"
+}

@@ -1,32 +1,42 @@
 {
-    "manifest_version": 2,
-    "name": "__MSG_extName__",
-    "description": "__MSG_extDesc__",
-    "version": "0.0.20",
-    "default_locale": "en",
-    "icons": {
-      "128": "icon-128.png",
-      "48": "icon-48.png",
-      "16": "icon-16-system.png"
-   },
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDesc__",
+  "version": "0.0.4",
+  "default_locale": "en",
+  "icons": {
+    "128": "icon-128.png",
+    "48": "icon-48.png",
+    "16": "icon-16-system.png"
+  },
 
-   "author": "Ken Frederick",
+  "author": "Ken Frederick",
 
-    "background": {
-        "persistent": true,
-        "scripts": [
-            "app/background.js"
-        ]
-    },
-
-    "permissions": [
-        "contextMenus",
-        "tabs",
-        "activeTab",
-        "webRequest",
-        "webRequestBlocking",
-        "file://*",
-        "http://*/*",
-        "https://*/*"
+  "background": {
+    "persistent": true,
+    "scripts": [
+      "js/background.js"
     ]
+  },
+
+  "content_scripts": [{
+    "matches": [
+      "*://docs.google.com/*"
+    ],
+    "js": [
+      "js/content-script.js"
+    ],
+    "run_at": "document_end"
+  }],
+    
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "activeTab",
+    "storage",
+    "unlimitedStorage",
+    "webRequest",
+    "webRequestBlocking",
+    "*://*/*"
+  ]
 }
