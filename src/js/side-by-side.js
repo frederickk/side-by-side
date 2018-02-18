@@ -10,19 +10,46 @@
  *
  */
 
+const Split = require('split.js')
+const SplitPane = require('split-pane');
+const Utils = require('utils');
+
+
 
 // ------------------------------------------------------------------------
 //
 // Properties
 //
 // ------------------------------------------------------------------------
-const prefix = '--sbs-';
-const ids = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+/**
+ * Prefix for classes/IDs/localStorage
+ * @private {string}
+ */
+const prefix_ = '--sbs-';
+
+/**
+ * Default width of gutter
+ * @private {number}
+ */
+const width_ = 6;
+
+/**
+ * Default height of inputs
+ * @private {number}
+ */
+const height_ = 42;
+
+/**
+ * Menu items for options menu
+ * @private {Array}
+ */
+const optionsMenuItems_ = ['swap', 'flip', 'add'];
+// const optionsMenuItems_ = ['swap', 'flip', 'add', 'share', 'distribute'];
 
 
 
 class SideBySide {
-  constructor(properties={}) {
+  constructor() {
     /**
      * Container for holding frames
      * @private {Element}
@@ -30,32 +57,20 @@ class SideBySide {
     this.container_ = document.querySelector('#container');
 
     /**
-     * Container for swap button
-     * @private {Element}
-     */
-    this.swapButton_ = document.querySelector('#swap-button');
-
-    /**
      * The orientation of the frames, left/right, top/bottom
      * @private {string}
      */
-    this.orientation_ = localStorage.getItem(`${prefix}this.orientation_`) || 'horizontal';
+    this.orientation_ = 'vertical';
+    // this.orientation_ = localStorage.getItem(`${prefix_}orientation`) || 'horizontal';
 
     /**
-     * Integer to track of number of frames.
-     * @private {number}
-     */
-    this.count_ = 0;
-
-    /**
-     * Array to hold frames
+     * Load array of frame (URLs)
      * @private {Array}
      */
-    this.frames_ = [];
+    this.panes_ = Utils.loadArray(`${prefix_}pane`);
 
-    // Add initial number of frames e.g. 2
-    this.add(this.orientation_);
-    this.add(this.orientation_);
+    // Create/inject panes into #container
+    this.createPanes_();
 
     // Set orientation of frames
     this.setOrientation(this.orientation_);
@@ -64,42 +79,27 @@ class SideBySide {
     this.attach_();
   }
 
-  // ------------------------------------------------------------------------
-  load(index, overwrite) {
-    let frame = document.getElementById(`frame${index}`);
-    let input = document.getElementById(`input${index}`);
-    let stored = localStorage.getItem(`${prefix}frame${index}`);
+  /**
+   * [createPanes_ description]
+   * @return {[type]} [description]
+   */
+  createPanes_() {
+    // To be safe, clear everything from container and start fresh
+    this.container_.innerHTML = '';
 
-    if (!overwrite) {
-      input.value = (stored)
-        ? stored
-        : input.value;
+    if (this.panes_.length === 1) {
+      // this.panes_ should have a length of 2, so add an empty value
+      this.panes_ = this.panes_.concat([null]);
+    } else if (this.panes_.length <= 0) {
+      this.panes_ = [null, null];
     }
 
-    let isValid = this.isValidURL_(input.value);
+    this.panes_.forEach(url => {
+      this.add(url);
+    });
 
-    if (isValid) {
-      this.hasErrorState_(input, false);
-      localStorage.setItem(`${prefix}frame${index}`, String(input.value));
-    } else {
-      this.hasErrorState_(input, true);
-      // input.value = (input.value.indexOf('http') > 0 || input.value.indexOf('file') > 0)
-      //   ? input.value
-      //   : `http://${input.value}`;
-
-      this.request_('GET', input.value).then((response) => {
-        this.hasErrorState_(input, false);
-        localStorage.setItem(`${prefix}frame${index}`, String(input.value));
-
-      }).catch((err) => {
-        this.hasErrorState_(input, false);
-      });
-    }
-
-    frame.src = (input.value)
-      ? input.value
-      : '';
-    frame.src = frame.src;
+    // After the panes are created, inject the .gutter
+    this.createGutter_();
   }
 
   /**
@@ -107,241 +107,174 @@ class SideBySide {
    * @private
    */
   createGutter_() {
-    try {
-      let gutter = document.querySelector('.gutter');
-      gutter.parentElement.removeChild(gutter);
-    } catch(err) {
-      console.warn('⚠️ Gutter Error:', err);
-    }
+    let gutter;
 
-    Split(this.frames_, {
-      gutterSize: 6,
-      cursor: 'col-resize',
-      direction: this.orientation_
+    // If a gutter(s) already exists, remove it(them).
+    this.adjustGutters_(gutter => {
+      gutter.parentElement.removeChild(gutter);
     });
+
+    const split = new Split([...document.querySelectorAll('.split')], {
+      gutterSize: width_,
+      cursor: 'col-resize',
+      direction: this.orientation_,
+    });
+
+    // create options menu within gutter
+    this.adjustGutters_(gutter => {
+      gutter.addEventListener('mouseover', this.gutterMouseoverHandler_, false);
+      gutter.addEventListener('mouseout', this.gutterMouseoutHandler_, false);
+      this.createOptions_(gutter);
+    });
+  }
+
+  /**
+   * Create options menu items
+   * @param  {[type]} parent [description]
+   */
+  createOptions_(parent) {
+    let optionsMenu = document.createElement('ul');
+    optionsMenu.classList.add('options-menu');
+
+    optionsMenuItems_.forEach(str => {
+      let item = document.createElement('li');
+      item.classList.add('menu-item', `${str}`, 'material-icons');
+
+      let icon = document.createElement('i');
+      icon.classList.add('material-icons');
+
+      // item.innerHTML = str;
+      // TODO(frederickk): fix this sloppiness, although it might not semantically
+      // make sense, erhpas the optionsMenuItems_ array should be a list of
+      // valid icon names e.g. ['view_agenda', 'swap_horiz', 'open_in_new']
+      if (str === 'swap') {
+        // icon.innerHTML = 'autorenew';
+        // icon.innerHTML = 'vertical_align_center';
+        icon.innerHTML = 'view_agenda';
+        item.addEventListener('click', this.swapOrientation.bind(this), false);
+      } else if (str === 'flip') {
+        icon.innerHTML = 'swap_horiz';
+        // icon.innerHTML = 'flip';
+        item.addEventListener('click', this.flipButtonHandler_.bind(this), false);
+      } else if (str === 'add') {
+        icon.innerHTML = 'add';
+        item.addEventListener('click', this.addButtonHandler_.bind(this), false);
+      } else if (str === 'share') {
+        // icon.innerHTML = 'share';
+        // icon.innerHTML = 'web';
+        icon.innerHTML = 'open_in_new';
+        item.addEventListener('click', this.shareButtonHandler_.bind(this), false);
+      }
+
+      item.appendChild(icon);
+      optionsMenu.appendChild(item);
+    });
+
+    parent.appendChild(optionsMenu);
+  }
+
+  /**
+   * Loop through all gutters and use callback to adjust individually
+   * @private
+   * @param  {Function} callback
+   * @param  {string}   [selector='.gutter']
+   */
+  adjustGutters_(callback, selector='.gutter') {
+    let gutter;
+
+    try {
+      gutter = document.querySelectorAll(selector);
+      gutter.forEach(item => {
+        callback(item);
+      });
+    } catch(err) {
+      // console.warn('⚠️ Gutter Error:', err);
+    }
+  }
+
+  /**
+   * Create a random string to use as ID's for <iframe>
+   * @return {string}
+   */
+  createID_() {
+    return Math.random().toString(36).substring(2, 15);
+  }
+
+  /**
+   * Add a frame
+   * @param {string} url
+   */
+  add(url) {
+    const id = this.createID_();
+    const selector = `${prefix_}${id}`;
+
+    // Create pane and add to parent (.container)
+    let pane = new SplitPane();
+    pane.create(this.container_, selector);
+
+    // Load pane with content
+    Utils.load(`#frame-${selector}`, url, false);
+  }
+
+  /**
+   * TODO(frederickk)
+   */
+  remove() {
   }
 
   /**
    * Set orientation of frames
-   *
-   * @return {string}
    */
   setOrientation(orientation) {
-    // Orient frames, i.e. toggle some CSS classes
-    if (orientation === 'vertical') {
-      this.container_.classList.remove('split-horizontal');
-      this.container_.classList.add('split-vertical');
-      this.swapButton_.style.transform = 'rotate(0deg)';
-    } else {
+    if (orientation === 'horizontal') {
       this.container_.classList.add('split-horizontal');
       this.container_.classList.remove('split-vertical');
-      this.swapButton_.style.transform = 'rotate(90deg)';
+    } else {
+      this.container_.classList.remove('split-horizontal');
+      this.container_.classList.add('split-vertical');
     }
-    localStorage.setItem(`${prefix}${orientation}`, orientation);
+    localStorage.setItem(`${prefix_}${orientation}`, orientation);
 
-    // Update gutter orientation
+    // Update gutter orientation, i.e. re-create gutter
     this.createGutter_();
 
-    // Update frame sizes to maintain proportions set by user before swapping
+    // Update pane sizes to maintain proportions set by user before swapping
     // orientation
-    this.frames_.forEach(selector => {
-      let element = document.querySelector(selector);
-
+    document.querySelectorAll('.split').forEach(pane => {
       if (orientation == 'horizontal') {
-        element.style.width = element.style.height;
-        element.style.height = '';
+        pane.style.width = pane.style.height;
+        pane.style.height = '';
       } else {
-        element.style.height = element.style.width;
-        element.style.width = '';
+        pane.style.height = pane.style.width;
+        pane.style.width = '';
       }
     });
-
-    return orientation;
   }
 
   /**
    * Toggle orientation of frames  top/bottom <--> left/right
-   *
-   * @return {string}
    */
   swapOrientation() {
-    if (this.orientation_ == 'horizontal') {
+    if (this.orientation_ === 'horizontal') {
       this.orientation_ = 'vertical';
     } else {
       this.orientation_ = 'horizontal';
     }
 
     this.setOrientation(this.orientation_);
-
-    return this.orientation_;
   }
 
   /**
-   * Add a frame
-   * @param {string} orientation
+   * [flipPlacement_ description]
+   * @param  {Element} element
+   * @return {[type]}         [description]
    */
-  add(orientation='horizontal') {
-    let index = this.count_;
-    let selector = `${prefix}${ids[index]}`;
+  flipPlacement_(element) {
+    const previous = element.previousSibling;
+    const next = element.nextSibling;
 
-    // Add frame, include '#' ID marker
-    this.frames_.push(`#${selector}`);
-
-    // Create iFrame container
-    let frameContainer = document.createElement('div');
-    frameContainer.id = selector;
-    frameContainer.classList.add('split');
-
-    // Create input (e.g. URL holder)
-    let inputContainer = document.createElement('div');
-    inputContainer.classList.add('input-container');
-
-    // Create frame URL input
-    let input = document.createElement('input');
-    input.type = 'text';
-    input.id = input.name = `input${index}`;
-    input.value = '';
-    input.placeholder = 'Enter URL';
-    input.addEventListener('blur', event => {
-      this.load(index, true);
-      if (input.classList.contains('show')) {
-        input.classList.remove('show');
-      }
-    });
-    input.addEventListener('keypress', event => {
-      let key = event.which || event.keyCode;
-      if (key === 13) { // enter
-        input.blur();
-      }
-    });
-
-    // Create iFrame for content
-    let frame = document.createElement('iframe');
-    frame.id = `frame${index}`;
-    frame.src = './blank.html';
-    // (no value)       Applies all restrictions
-    // allow-forms      Re-enables form submission
-    // allow-pointer-lock   Re-enables APIs
-    // allow-popups     Re-enables popups
-    // allow-same-origin  Allows the iframe content to be treated as being from the same origin
-    // allow-scripts    Re-enables scripts
-    // allow-top-navigation Allows the iframe content to navigate its top-level browsing context
-    frame.setAttribute('sandbox', 'allow-forms allow-same-origin allow-scripts');
-
-    // See if content is loaded
-    this.isReloaded_(frame);
-
-    // Append frames and input to container
-    inputContainer.appendChild(input);
-    frameContainer.appendChild(inputContainer);
-    frameContainer.appendChild(frame);
-    this.container_.appendChild(frameContainer);
-
-    // Load frame with content
-    this.load(index, false);
-
-    this.count_++;
-  }
-
-  /**
-   * Remove a frame
-   * @param  {[type]} val
-   * @return {[type]}
-   */
-  remove(val) {
-    this.count_ = ((this.count_ - 1) > 0)
-      ? this.count_ - 1
-      : this.count_;
-  }
-
-  /**
-   * Promisify-ed XHR request
-   * http://stackoverflow.com/questions/30008114/how-do-i-promisify-native-xhr
-   * @private
-   * @param  {string} method
-   * @param  {string} url
-   * @return {Promise}
-   */
-  request_(method, url) {
-    return new Promise((resolve, reject) => {
-      let xhr = new XMLHttpRequest();
-      xhr.open(method, url);
-      xhr.onload = () => {
-        if (this.status >= 200 && this.status < 300) {
-          resolve(xhr.response);
-        } else {
-          reject({
-            status: this.status,
-            statusText: xhr.statusText
-          });
-        }
-      };
-      xhr.onerror = () => {
-        reject({
-          status: this.status,
-          statusText: xhr.statusText
-        });
-      };
-      xhr.send();
-    });
-  }
-
-  /**
-   * Check if string is a valid URL
-   * @private
-   * @param  {string}  str
-   * @return {Boolean} true if valid, false otherwise
-   */
-  isValidURL_(str) {
-    return validator.isURL(str, {
-      protocols: ['http', 'https', 'ftp', 'file', 'localhost', 'chrome', 'chrome-extension'],
-      require_protocol: true,
-      require_valid_protocol: true
-    });
-  }
-
-  /**
-   * Add onLoad event to keep track of how many times the content of an element
-   * is (re)loaded
-   * @private
-   * @param  {Element}  ele
-   * @return {Boolean}
-   */
-  isReloaded_(ele) {
-    ele.dataset.reloaded = 0;
-
-    let id = ele.id;
-
-    ele.onload = () => {
-      let reloaded = ele.dataset.reloaded;
-      ele.dataset.reloaded++;
-
-      // if (reloaded > 0) {
-      //   ele.src = './load-error.html';
-      //   console.warn('stop', ele.document);
-      //   // ele.stop();
-      //   ele.setAttribute('sandbox', '');
-      //   window.frames[1].stop();
-      //   window.stop();
-      // }
-    };
-  }
-
-  /**
-   * Check if Element has an error state
-   * @private
-   * @param  {Element} ele
-   * @param  {Boolean} isError
-   * @return {Boolean}
-   */
-  hasErrorState_(ele, isError) {
-    if (isError && !ele.classList.contains('error')) {
-      ele.classList.add('error');
-      return true;
-    } else if (!isError && ele.classList.contains('error')) {
-      ele.classList.remove('error');
-      return false;
-    }
+    element.after(previous);
+    element.before(next);
   }
 
 
@@ -356,49 +289,98 @@ class SideBySide {
    * @private
    */
   attach_() {
-    document.querySelector(`#${prefix}b`).onload = () => {
-      console.warn('load!!!', this.contentWindow);
-    }
+    window.addEventListener('onpaneload', event => {
+      let srcArray = [];
+      document.querySelectorAll('iframe').forEach(iframe => {
+        srcArray.push(iframe.src);
+      });
+
+      Utils.saveArray(`${prefix_}pane`, srcArray);
+    });
+
+    // TODO(frederickk): fix the frame busting!
+    // http://stackoverflow.com/questions/958997/frame-buster-buster-buster-code-needed
     // window.onbeforeunload = () => {
-    //   alert('onbeforeunload');
-    // }
-    // console.alert(window.onbeforeunload);
-
-    this.swapButton_.addEventListener('click', this.swapClickHandler_.bind(this));
+    //   document.body.dataset.reloaded++;
+    //   console.warn(document.body.dataset.reloaded);
+    // };
+    // setInterval(() => {
+    //
+    //   if (parseInt(document.body.dataset.reloaded) > 0) {
+    //     document.body.dataset.reloaded -= 2;
+    //     // window.top.location = 'http://example.org/page-which-responds-with-204';
+    //
+    //     alert(`onbeforeunload ${document.body.dataset.reloaded}`);
+    //
+    //     for (let i = 0; i < window.frames.length; i++) {
+    //       console.warn(i);
+    //       window.frames[i].setAttribute('sandbox', '');
+    //       window.frames[i].stop();
+    //       console.log(window.frames[i]);
+    //       window.stop();
+    //       // clearInterval(frameBustBust);
+    //     }
+    //   }
+    // }, 1);
   }
 
-  swapClickHandler_(event) {
-    this.swapOrientation();
-    // window.location.reload(true);
+  /**
+   * Handler for gutter on mouseover
+   * @private
+   * @param  {Event} event
+   */
+  gutterMouseoverHandler_(event) {
+    const threshold = height_ * optionsMenuItems_.length;
+
+    if (this.classList.contains('gutter-horizontal') && event.clientY <= threshold) {
+      this.style.width = `${height_}px`;
+    } else if (this.classList.contains('gutter-vertical') && event.clientX <= threshold) {
+      this.style.height = `${height_}px`;
+    }
   }
 
-  // TODO: fix the frame busting!
-  // http://stackoverflow.com/questions/958997/frame-buster-buster-buster-code-needed
-  // window.onbeforeunload = () => {
-  //   document.body.dataset.reloaded++;
-  //   console.warn(document.body.dataset.reloaded);
-  // };
-  // setInterval(() => {
-  //
-  //   if (parseInt(document.body.dataset.reloaded) > 0) {
-  //     document.body.dataset.reloaded -= 2;
-  //     // window.top.location = 'http://example.org/page-which-responds-with-204';
-  //
-  //     alert(`onbeforeunload ${document.body.dataset.reloaded}`);
-  //
-  //     for (let i = 0; i < window.frames.length; i++) {
-  //       console.warn(i);
-  //       window.frames[i].setAttribute('sandbox', '');
-  //       window.frames[i].stop();
-  //       console.log(window.frames[i]);
-  //       window.stop();
-  //       // clearInterval(frameBustBust);
-  //     }
-  //   }
-  // }, 1);
+  /**
+   * Handler for gutter on mouseout
+   * @private
+   * @param  {Event} event
+   */
+  gutterMouseoutHandler_(event) {
+    if (this.classList.contains('gutter-horizontal')) {
+      this.style.width = `${width_}px`;
+    } else if (this.classList.contains('gutter-vertical')) {
+      this.style.height = `${width_}px`;
+    }
+  }
+
+  /**
+   * Handler for flipping the placement of two adjacent <iframes>
+   * @private
+   * @param  {Event} event
+   */
+  flipButtonHandler_(event) {
+    this.flipPlacement_(event.target.closest('.gutter'));
+  }
+
+  /**
+   * Handler for adding additional split pane
+   * @private
+   * @param  {Event} event
+   */
+  addButtonHandler_(event) {
+    this.panes_.push('');
+    this.createPanes_();
+  }
+
+  /**
+   * Handler for opening split as shareable live URL
+   * @private
+   * @param  {Event} event
+   */
+  shareButtonHandler_(event) {
+  }
+
 
 }
 
 
-// Instantiate class
-new SideBySide();
+module.exports = SideBySide;
