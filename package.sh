@@ -4,7 +4,7 @@ NAME=$1
 
 echo $NAME
 
-# clean-up .DS_Store
+# remove .DS_Store files
 find . -type f -name './src/*.DS_Store' -ls -delete
 
 if [ -f ./$NAME.crx ]; then
@@ -19,6 +19,8 @@ else
 fi
 
 rm ./$NAME.zip
-zip -r -X $NAME.zip ./src
+
+# Zip up everything in side of ./src except ./src/css and ./src/js
+zip -r -X $NAME.zip ./src -x \*/css\* \*/js\*
 
 echo "$NAME Package complete!"
