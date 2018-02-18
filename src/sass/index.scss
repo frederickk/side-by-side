@@ -1,0 +1,64 @@
+//
+// Side-by-Side
+// main.css
+//
+// Ken Frederick
+// ken.frederick@gmx.de
+//
+// http://kenfrederick.de/
+// http://blog.kenfrederick.de/
+//
+//
+
+@import url('https://fonts.googleapis.com/css?family=Material+Icons|Space+Mono&subset=latin');
+
+@import 'variables';
+@import 'split';
+@import 'inputs';
+@import 'options';
+
+body {
+  font-family: 'Space Mono';
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+
+  &.blank {
+    // background: $default-white;
+    background: radial-gradient($default-grey 15%, transparent 16%), radial-gradient($default-grey 15%, transparent 16%), $default-white;
+    background-position: 0 0, 9px 9px;
+    background-size: 18px 18px;
+  }
+
+  &.error {
+    background: $default-error-background;
+  }
+}
+
+iframe {
+  border: 0;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+
+.container {
+  align-items: stretch;
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  z-index: 0;
+
+  &.split-horizontal {
+    flex-direction: row;
+  }
+
+  &.split-vertical {
+    flex-direction: column;
+  }
+}

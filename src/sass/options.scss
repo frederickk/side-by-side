@@ -1,0 +1,55 @@
+ul {
+  &.options-menu {
+    background-color: $default-black;
+    left: 0;
+    list-style-type: none;
+    margin: 0;
+    opacity: .2;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    transition: opacity ($default-timing * 2) ease-in-out;
+
+    &:hover {
+      background-color: transparent;
+      opacity: 1;
+    }
+  }
+
+  li {
+    &.menu-item {
+      border-bottom: 1px $default-grey-light solid;
+      filter: opacity(.3);
+      float: left;
+      height: $default-height;
+      line-height: $default-height;
+      text-align: center;
+      text-transform: lowercase;
+      transition: all $default-timing ease-in-out;
+      width: $default-height;
+
+      &:hover {
+        background-color: $default-grey-light;
+        filter: opacity(1);
+      }
+    }
+
+    &.swap,
+    &.flip {
+      transform: rotate(-90deg);
+    }
+  }
+}
+
+
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(90deg);
+  }
+}

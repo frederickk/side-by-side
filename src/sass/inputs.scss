@@ -1,0 +1,36 @@
+.input-container {
+  // background-color: rgba($default-black, .09);
+  background-color: $default-grey;
+  height: ($default-height / 2);
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  transition: all $default-timing ease-in-out;
+  width: 100%;
+  z-index: 500;
+
+  .vertical {
+    width: 100%;
+  }
+
+  &:hover {
+    height: $default-height;
+    opacity: 1;
+  }
+}
+
+input[type=text] {
+  background-color: transparent;
+  border: 0;
+  font-family: 'Space Mono';
+  height: 18px;
+  padding: 12px;
+  position: fixed;
+  transition: all $default-timing ease-in-out;
+  width: 100%;
+
+  &.error {
+    background-color: $default-error-background;
+    color: $default-error-color;
+  }
+}

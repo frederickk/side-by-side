@@ -1,0 +1,65 @@
+.split {
+  align-self: stretch;
+  box-sizing: border-box;
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+}
+
+.gutter {
+  background-color: $default-white;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  filter: opacity(.3);
+  overflow: hidden;
+  position: relative;
+  transition: all $default-timing ease-in-out;
+  z-index: 100;
+
+  &:hover {
+    filter: opacity(1);
+  }
+
+  &:active {
+    background-color: $default-grey-light;
+  }
+}
+
+
+// top/bottom
+.gutter-vertical {
+  background-image: url('../images/horizontal.png');
+  border-bottom: 2px $default-grey-light solid;
+  border-top: 2px $default-grey-light solid;
+  cursor: row-resize;
+  height: $default-gutter-width;
+  width: 100%;
+
+  .options {
+    // background-image: url('./images/options-horizontal.png');
+    border-right: 1px $default-grey-light solid;
+    height: 100%;
+    // left: 0;
+    width: $default-height;
+  }
+}
+
+// left/right
+.gutter-horizontal {
+  background-image: url('../images/vertical.png');
+  border-left: 2px $default-grey-light solid;
+  border-right: 2px $default-grey-light solid;
+  cursor: col-resize;
+  height: 100%;
+  width: $default-gutter-width;
+
+  .options {
+    // background-image: url('./images/options-vertical.png');
+    border-bottom: 1px $default-grey-light solid;
+    height: $default-height;
+    // top: 0;
+    width: 100%;
+  }
+}
