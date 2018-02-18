@@ -1,4 +1,4 @@
-// Lifted nearly verbatim from https://raw.githubusercontent.com/google-developer-training/pwa-training-labs/master/cache-api-lab/solution/service-worker.js
+// Lifted nearly verbatim from https://github.com/google-developer-training/pwa-training-labs/tree/master/cache-api-lab
 
 (function() {
   'use strict';
