@@ -11,7 +11,8 @@ Thumbs.db
 
 # Compiled source #
 ###################
-
+*.min.*
+*.zip
 
 # Folders #
 ###################
