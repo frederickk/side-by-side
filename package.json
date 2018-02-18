@@ -1,11 +1,12 @@
 {
   "name": "side-by-side",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Two sites, side-by-side",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./package.sh side-by-side"
+    "dev": "concurrently \"NODE_ENV=development node_modules/.bin/webpack --watch\" \"webpack-dev-server\"",
+    "build": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side"
   },
   "keywords": [
     "chrome",
@@ -13,5 +14,21 @@
     "utility"
   ],
   "author": "Ken Frederick <ken.frederick@gmx.de>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "concurrently": "^3.5.1",
+    "css-loader": "^0.28.9",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "node-sass": "^4.7.2",
+    "postcss-loader": "^2.1.0",
+    "sass-loader": "^6.0.6",
+    "split.js": "^1.3.5",
+    "url-loader": "^0.6.2",
+    "validator": "^9.4.0",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1"
+  }
 }
