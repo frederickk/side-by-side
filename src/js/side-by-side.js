@@ -10,6 +10,7 @@
  *
  */
 
+const constants = require('constants');
 const Split = require('split.js')
 const SplitPane = require('split-pane');
 const Utils = require('utils');
@@ -21,12 +22,6 @@ const Utils = require('utils');
 // Properties
 //
 // ------------------------------------------------------------------------
-/**
- * Prefix for classes/IDs/localStorage
- * @private {string}
- */
-const prefix_ = '--sbs-';
-
 /**
  * Default width of gutter
  * @private {number}
@@ -60,14 +55,13 @@ class SideBySide {
      * The orientation of the frames, left/right, top/bottom
      * @private {string}
      */
-    this.orientation_ = 'vertical';
-    // this.orientation_ = localStorage.getItem(`${prefix_}orientation`) || 'horizontal';
+    this.orientation_ = localStorage.getItem(`${constants.prefix}orientation`) || 'horizontal';
 
     /**
      * Load array of frame (URLs)
      * @private {Array}
      */
-    this.panes_ = Utils.loadArray(`${prefix_}pane`);
+    this.panes_ = Utils.loadArray(`${constants.prefix}pane`);
 
     // Create/inject panes into #container
     this.createPanes_();
@@ -98,12 +92,12 @@ class SideBySide {
       this.add(url);
     });
 
-    // After the panes are created, inject the .gutter
+    // After the panes are created, create gutter (draggable divider)
     this.createGutter_();
   }
 
   /**
-   * Instantiate Split class to handle window dividing
+   * Create gutter and instantiate Split.js class to handle window dividing
    * @private
    */
   createGutter_() {
@@ -143,7 +137,6 @@ class SideBySide {
       let icon = document.createElement('i');
       icon.classList.add('material-icons');
 
-      // item.innerHTML = str;
       // TODO(frederickk): fix this sloppiness, although it might not semantically
       // make sense, erhpas the optionsMenuItems_ array should be a list of
       // valid icon names e.g. ['view_agenda', 'swap_horiz', 'open_in_new']
@@ -152,13 +145,16 @@ class SideBySide {
         // icon.innerHTML = 'vertical_align_center';
         icon.innerHTML = 'view_agenda';
         item.addEventListener('click', this.swapOrientation.bind(this), false);
+
       } else if (str === 'flip') {
         icon.innerHTML = 'swap_horiz';
         // icon.innerHTML = 'flip';
         item.addEventListener('click', this.flipButtonHandler_.bind(this), false);
+
       } else if (str === 'add') {
         icon.innerHTML = 'add';
         item.addEventListener('click', this.addButtonHandler_.bind(this), false);
+
       } else if (str === 'share') {
         // icon.innerHTML = 'share';
         // icon.innerHTML = 'web';
@@ -193,33 +189,18 @@ class SideBySide {
   }
 
   /**
-   * Create a random string to use as ID's for <iframe>
-   * @return {string}
-   */
-  createID_() {
-    return Math.random().toString(36).substring(2, 15);
-  }
-
-  /**
-   * Add a frame
+   * Add a pane
    * @param {string} url
    */
   add(url) {
-    const id = this.createID_();
-    const selector = `${prefix_}${id}`;
+    const id = `${constants.prefix}${Utils.randomStr()}`;
 
     // Create pane and add to parent (.container)
-    let pane = new SplitPane();
-    pane.create(this.container_, selector);
+    let pane = new SplitPane(constants.prefix);
+    pane.create(this.container_, id);
 
     // Load pane with content
-    Utils.load(`#frame-${selector}`, url, false);
-  }
-
-  /**
-   * TODO(frederickk)
-   */
-  remove() {
+    Utils.load(pane.iframe, url);
   }
 
   /**
@@ -233,7 +214,7 @@ class SideBySide {
       this.container_.classList.remove('split-horizontal');
       this.container_.classList.add('split-vertical');
     }
-    localStorage.setItem(`${prefix_}${orientation}`, orientation);
+    localStorage.setItem(`${constants.prefix}orientation`, orientation);
 
     // Update gutter orientation, i.e. re-create gutter
     this.createGutter_();
@@ -289,15 +270,6 @@ class SideBySide {
    * @private
    */
   attach_() {
-    window.addEventListener('onpaneload', event => {
-      let srcArray = [];
-      document.querySelectorAll('iframe').forEach(iframe => {
-        srcArray.push(iframe.src);
-      });
-
-      Utils.saveArray(`${prefix_}pane`, srcArray);
-    });
-
     // TODO(frederickk): fix the frame busting!
     // http://stackoverflow.com/questions/958997/frame-buster-buster-buster-code-needed
     // window.onbeforeunload = () => {
@@ -378,8 +350,6 @@ class SideBySide {
    */
   shareButtonHandler_(event) {
   }
-
-
 }
 
 

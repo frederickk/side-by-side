@@ -18,15 +18,5 @@
     <div id="container" class="container"></div>
 
     <script src="./index.min.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js').then(registration => {
-          console.log('Service Worker registration successful with scope: ', registration.scope);
-        })
-        .catch(function(err) {
-          console.log('Service Worker registration failed: ', err);
-        });
-      }
-    </script>
   </body>
 </html>

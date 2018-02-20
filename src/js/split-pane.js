@@ -10,7 +10,9 @@
  *
  */
 
+const constants = require('constants');
 const Utils = require('utils');
+
 
 
 // ------------------------------------------------------------------------
@@ -18,14 +20,6 @@ const Utils = require('utils');
 // Properties
 //
 // ------------------------------------------------------------------------
-/**
- * Prefix for classes/IDs/localStorage
- * @private {string}
- */
-const prefix_ = '--sbs-';
-
-
-
 class SplitPane {
   constructor() {
     /**
@@ -63,8 +57,9 @@ class SplitPane {
   /**
    * Create all of the elements for each split pane
    * @param  {Element} parent
+   * @param  {string} [id='']
    */
-  create(parent, id) {
+  create(parent, id='') {
     this.iframeContainer.id = id;
 
     this.input.id = this.input.name = `input-${id}`;
@@ -73,6 +68,10 @@ class SplitPane {
 
     this.iframe.id = `frame-${id}`;
     this.iframe.src = './blank.html';
+    // sandbox values and their meanings
+    // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
+    // TODO(frederickk): Dig deeper into having <iframes> work when frame busting
+    // code is implemented by site
     // (no value)           Applies all restrictions
     // allow-forms          Re-enables form submission
     // allow-pointer-lock   Re-enables APIs
@@ -85,17 +84,31 @@ class SplitPane {
     // See if content is loaded
     this.isReloaded_(this.iframe);
 
-    // Add <input> to inputContainer
     this.inputContainer.appendChild(this.input);
-
-    // Add inputContainer to iframeContainer
     this.iframeContainer.appendChild(this.inputContainer);
-
-    // Add <iframe> to iframeContainer
     this.iframeContainer.appendChild(this.iframe);
-
-    // Add iframeContainer to parent
     parent.appendChild(this.iframeContainer);
+  }
+
+  /**
+   * Check if Element has an error state
+   * @private
+   * @param  {Element} element
+   * @param  {Boolean} isError
+   * @return {Boolean}
+   */
+  hasErrorState_(element, isError) {
+    if (element.value != '') {
+      if (isError && !element.classList.contains('error')) {
+        element.classList.add('error');
+        return true;
+      } else if (!isError && element.classList.contains('error')) {
+        element.classList.remove('error');
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -124,27 +137,6 @@ class SplitPane {
     };
   }
 
-  /**
-   * Check if Element has an error state
-   * @private
-   * @param  {Element} element
-   * @param  {Boolean} isError
-   * @return {Boolean}
-   */
-  hasErrorState_(element, isError) {
-    if (element.value != '') {
-      if (isError && !element.classList.contains('error')) {
-        element.classList.add('error');
-        return true;
-      } else if (!isError && element.classList.contains('error')) {
-        element.classList.remove('error');
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
 
 
   // ------------------------------------------------------------------------
@@ -157,44 +149,51 @@ class SplitPane {
    * @private
    */
   attach_() {
-    this.input.addEventListener('blur', event => {
-      const parent = this.input.closest('.split');
-      const iframe = parent.querySelector('iframe');
+    this.iframe.addEventListener('paneload', this.iframePaneloadHandler_.bind(this));
 
-      const isLoaded = Utils.load(`#${iframe.id}`, this.input.value, true);
-
-      if (isLoaded) {
-        this.hasErrorState_(this.input, false);
-      } else {
-        this.hasErrorState_(this.input, true);
-      }
-
-      if (document.activeElement === this.input) {
-        // this.input.focus();
-        this.input.blur();
-      }
-    });
-
+    this.input.addEventListener('blur', this.inputInputHandler_.bind(this));
     this.input.addEventListener('keypress', event => {
       const key = event.which || event.keyCode;
       if (key === 13) { // enter
         this.input.blur();
       }
     });
-
-    this.iframe.addEventListener('load', event => {
-      const paneLoad = new CustomEvent('onpaneload', {
-        detail: {
-          id: event.target.id,
-          src: event.target.src,
-        }
-      });
-
-      window.dispatchEvent(paneLoad);
-    }, true);
   }
 
+  /**
+   * Handler for custom <iframe> 'paneload' Events; iterates through every <input> in the
+   * DOM and saves them in localStorage as an array.
+   * @param  {Event} event
+   */
+  iframePaneloadHandler_(event) {
+    const split = this.iframe.closest('.split');
+    const input = split.querySelector('input');
 
+    input.value = this.iframe.src;
+
+    let srcArray = [];
+    document.querySelectorAll('.split input').forEach(input => {
+      srcArray.push(input.value);
+    });
+
+    Utils.saveArray(`${constants.prefix}pane`, srcArray);
+  }
+
+  /**
+   * Handler for <input> that
+   * @param  {Event} event
+   */
+  inputInputHandler_(event) {
+    const split = this.input.closest('.split');
+    const iframe = split.querySelector('iframe');
+
+    const isLoaded = Utils.load(iframe, this.input.value);
+    if (isLoaded) {
+      this.hasErrorState_(this.input, false);
+    } else {
+      this.hasErrorState_(this.input, true);
+    }
+  }
 
 }
 
