@@ -1,11 +1,11 @@
 {
   "name": "side-by-side",
-  "version": "0.0.5",
-  "description": "Two sites, side-by-side",
+  "version": "0.6.2",
+  "description": "Load sites, side-by-side",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"NODE_ENV=development node_modules/.bin/webpack --watch\" \"webpack-dev-server\"",
+    "dev": "concurrently \"NODE_ENV=development node_modules/.bin/webpack --watch\" \"webpack-dev-server --host 0.0.0.0 --port 1112\"",
     "build": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side"
   },
   "keywords": [
@@ -26,6 +26,7 @@
     "postcss-loader": "^2.1.0",
     "sass-loader": "^6.0.6",
     "split.js": "^1.3.5",
+    "uglifyjs-webpack-plugin": "^1.2.0",
     "url-loader": "^0.6.2",
     "validator": "^9.4.0",
     "webpack": "^3.11.0",

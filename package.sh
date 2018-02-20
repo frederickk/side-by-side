@@ -20,7 +20,7 @@ fi
 
 rm ./$NAME.zip
 
-# Zip up everything in side of ./src except ./src/css and ./src/js
-zip -r -X $NAME.zip ./src -x \*/css\* \*/js\*
+# Zip up everything in side of ./src except ./src/css, ./src/js, and ./src/sass
+zip -r -X $NAME.zip ./src -x \*/css\* \*/js\* \*/sass\*
 
 echo "$NAME Package complete!"

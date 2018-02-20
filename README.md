@@ -1,11 +1,9 @@
 Side-by-Side
 ==============
 
-Two sites, side-by-side
+Load sites, side-by-side
 
 [Download Extension](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb?hl=en-US)
-
-TODO: support more than two panes
 
 TODO: find solution to sites that don't allow "framing" (e.g. stackoverflow)
 
