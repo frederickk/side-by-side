@@ -4,14 +4,14 @@
       "description": "Extension name"
     },
     "extDesc": {
-      "message": "Two sites, side-by-side",
+      "message": "Webseiten nebeneinander laden.",
       "description": "Extension description"
     },
 
-    "menuVertical": {
-        "message": "Open with top/bottom split"
+    "gutterVertical": {
+        "message": "Öffnen mit oben/unten Teilung"
     },
-    "menuHorizontal": {
-        "message": "Open with left/right split"
+    "gutterHorizontal": {
+        "message": "Öffnen mit links/rechts Teilung"
     }
 }

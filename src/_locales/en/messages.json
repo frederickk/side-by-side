@@ -4,14 +4,14 @@
       "description": "Extension name"
     },
     "extDesc": {
-      "message": "Two sites, side-by-side",
+      "message": "Load sites, side-by-side",
       "description": "Extension description"
     },
 
-    "menuVertical": {
+    "gutterVertical": {
         "message": "Open with top/bottom split"
     },
-    "menuHorizontal": {
+    "gutterHorizontal": {
         "message": "Open with left/right split"
     }
 }
