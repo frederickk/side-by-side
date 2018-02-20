@@ -25,41 +25,44 @@
   &:active {
     background-color: $default-grey-light;
   }
-}
 
-
-// top/bottom
-.gutter-vertical {
-  background-image: url('../images/horizontal.png');
-  border-bottom: 2px $default-grey-light solid;
-  border-top: 2px $default-grey-light solid;
-  cursor: row-resize;
-  height: $default-gutter-width;
-  width: 100%;
-
-  .options {
-    // background-image: url('./images/options-horizontal.png');
+  // left/right split
+  &.gutter-horizontal {
+    background-image: url('../images/vertical.png');
+    border-left: 1px $default-grey-light solid;
     border-right: 1px $default-grey-light solid;
+    cursor: col-resize;
     height: 100%;
-    // left: 0;
-    width: $default-height;
+    width: $default-gutter-width;
+
+    .options {
+      border-bottom: 1px $default-grey-light solid;
+      height: $default-height;
+      // top: 0;
+      width: 100%;
+    }
   }
-}
 
-// left/right
-.gutter-horizontal {
-  background-image: url('../images/vertical.png');
-  border-left: 2px $default-grey-light solid;
-  border-right: 2px $default-grey-light solid;
-  cursor: col-resize;
-  height: 100%;
-  width: $default-gutter-width;
-
-  .options {
-    // background-image: url('./images/options-vertical.png');
+  // top/bottom split
+  &.gutter-vertical {
+    background-image: url('../images/horizontal.png');
+    border: 0;
     border-bottom: 1px $default-grey-light solid;
-    height: $default-height;
-    // top: 0;
+    border-top: 1px $default-grey-light solid;
+    cursor: row-resize;
+    height: $default-gutter-width;
     width: 100%;
+
+    .options {
+      border-right: 1px $default-grey-light solid;
+      height: 100%;
+      // left: 0;
+      width: $default-height;
+    }
+
+    .swap,
+    .flip {
+      transform: rotate(-90deg);
+    }
   }
 }
