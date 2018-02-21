@@ -10,7 +10,7 @@
  *
  */
 
-const constants = require('constants');
+const defs = require('defs');
 const Utils = require('utils');
 
 
@@ -176,7 +176,7 @@ class SplitPane {
       srcArray.push(input.value);
     });
 
-    Utils.saveArray(`${constants.prefix}pane`, srcArray);
+    Utils.saveArray(`${defs.prefix}pane`, srcArray);
   }
 
   /**

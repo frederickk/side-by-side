@@ -10,6 +10,7 @@
  *
  */
 
+const defs = require('defs');
 const Validator = require('validator');
 
 
@@ -74,10 +75,6 @@ class Utils {
   static load(element, url='') {
     const isValid = Utils.isValidURL(url);
 
-    console.log('load element', element.nodeName);
-    console.log('load url', url);
-    console.log('load isValid', isValid);
-
     if (element.nodeName.toLowerCase() === 'iframe') {
       if (!isValid) {
         if (url != null || url != undefined) {
@@ -110,8 +107,6 @@ class Utils {
         }
       }
 
-      console.log('load url', url);
-
       if (url) {
         element.src = url;
         element.src = element.src;
@@ -121,8 +116,7 @@ class Utils {
       }
 
       element.onload = () => {
-        console.log('element.src', element.src);
-        if (element.src.indexOf('0.0.0.0:1112') > -1 || element.src.indexOf('chrome-extension://') > -1) {
+        if (element.src.indexOf(`${defs.devDomain}:${defs.devPort}`) > -1 || element.src.indexOf('chrome-extension://') > -1) {
           element.removeAttribute('src');
           // element.src = './blank.html';
         }

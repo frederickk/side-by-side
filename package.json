@@ -1,8 +1,12 @@
 {
   "name": "side-by-side",
-  "version": "0.6.2",
+  "version": "0.6.4",
   "description": "Load sites, side-by-side",
   "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frederickk/side-by-side"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"NODE_ENV=development node_modules/.bin/webpack --watch\" \"webpack-dev-server --host 0.0.0.0 --port 1112\"",
@@ -31,5 +35,8 @@
     "validator": "^9.4.0",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1"
+  },
+  "dependencies": {
+    "file-loader": "^1.1.8"
   }
 }

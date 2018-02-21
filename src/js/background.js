@@ -10,7 +10,7 @@
  *
  */
 
-const constants = require('constants');
+const defs = require('defs');
 const Utils = require('utils');
 
 
@@ -58,13 +58,15 @@ class Background {
       highlighted: true
     },
     tabs => {
-      let panes = Utils.loadArray(`${constants.prefix}pane`);
+      let panes = Utils.loadArray(`${defs.prefix}pane`);
       let len = panes.length;
       panes = [String(tabs[0].url), ...panes];
-      panes.splice(len);
+      if (panes.length > 1) {
+        panes.splice(len);
+      }
 
-      Utils.saveArray(`${constants.prefix}pane`, panes);
-      localStorage.setItem(`${constants.prefix}orientation`, orientation);
+      Utils.saveArray(`${defs.prefix}pane`, panes);
+      localStorage.setItem(`${defs.prefix}orientation`, orientation);
     });
     chrome.tabs.create({
       url: './index.html'

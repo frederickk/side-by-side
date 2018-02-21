@@ -10,7 +10,7 @@
  *
  */
 
-const constants = require('constants');
+const defs = require('defs');
 const Split = require('split.js')
 const SplitPane = require('split-pane');
 const Utils = require('utils');
@@ -55,13 +55,13 @@ class SideBySide {
      * The orientation of the frames, left/right, top/bottom
      * @private {string}
      */
-    this.orientation_ = localStorage.getItem(`${constants.prefix}orientation`) || 'horizontal';
+    this.orientation_ = localStorage.getItem(`${defs.prefix}orientation`) || 'horizontal';
 
     /**
      * Load array of frame (URLs)
      * @private {Array}
      */
-    this.panes_ = Utils.loadArray(`${constants.prefix}pane`);
+    this.panes_ = Utils.loadArray(`${defs.prefix}pane`);
 
     // Create/inject panes into #container
     this.createPanes_();
@@ -193,10 +193,10 @@ class SideBySide {
    * @param {string} url
    */
   add(url) {
-    const id = `${constants.prefix}${Utils.randomStr()}`;
+    const id = `${defs.prefix}${Utils.randomStr()}`;
 
     // Create pane and add to parent (.container)
-    let pane = new SplitPane(constants.prefix);
+    let pane = new SplitPane(defs.prefix);
     pane.create(this.container_, id);
 
     // Load pane with content
@@ -214,7 +214,7 @@ class SideBySide {
       this.container_.classList.remove('split-horizontal');
       this.container_.classList.add('split-vertical');
     }
-    localStorage.setItem(`${constants.prefix}orientation`, orientation);
+    localStorage.setItem(`${defs.prefix}orientation`, orientation);
 
     // Update gutter orientation, i.e. re-create gutter
     this.createGutter_();
