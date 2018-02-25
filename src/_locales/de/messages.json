@@ -7,6 +7,10 @@
       "message": "Webseiten nebeneinander laden.",
       "description": "Extension description"
     },
+    "detailDesc": {
+      "message": "Ein verstecktes Menü befindet sich oben (oder links, je nach Ausrichtung) womit man die Ausrichtung oder die Positionierung der Frames bestimmen kann oder sogar ein neues Frame hinzufügen.",
+      "description": "Detailed description"
+    },
 
     "gutterVertical": {
         "message": "Öffnen mit oben/unten Teilung"
