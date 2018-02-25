@@ -1,11 +1,8 @@
 const config = {
-  parser: 'sugarss',
-  plugins: {
-    'postcss-import': {},
-    'postcss-cssnext': {},
-    'cssnano': {}
-  }
-};
+  plugins: [
+    require('autoprefixer'),
+  ],
+}
 
 
 module.exports = config;

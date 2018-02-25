@@ -55,7 +55,7 @@ const config = {
       }),
     }, {
       test: /\.css$/,
-      use: ['style-loader', 'postcss-loader']
+      use: ['style-loader', 'css-loader', 'postcss-loader']
     }, {
       test: /\.(png|woff|woff2|eot|ttf|svg)$/,
       loader: 'url-loader?limit=100000'
