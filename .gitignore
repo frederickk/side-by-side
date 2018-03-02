@@ -8,12 +8,12 @@
 ehthumbs.db
 Thumbs.db
 
-
 # Compiled source #
 ###################
 *.min.*
 *.zip
 *.pem
+*.crx
 
 # Folders #
 ###################
