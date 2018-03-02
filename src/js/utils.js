@@ -12,6 +12,7 @@
 
 const defs = require('defs');
 const Validator = require('validator');
+const NormalizeUrl = require('normalize-url');
 
 
 class Utils {
@@ -29,7 +30,7 @@ class Utils {
 
       xhr.open(method, url, true);
       xhr.onload = () => {
-        if (this.status >= 200 && this.status < 300) {
+        if (xhr.status >= 200 && xhr.status < 300) {
           resolve(xhr.response);
         } else {
           reject({
@@ -75,33 +76,27 @@ class Utils {
   static load(element, url='') {
     const isValid = Utils.isValidURL(url);
 
+    console.log('LOAD', url);
+
     if (element.nodeName.toLowerCase() === 'iframe') {
+      console.log('LOAD isValid', isValid);
+
       if (!isValid) {
         if (url != null || url != undefined) {
-      //     const origUrl = url;
-      //
-      //     // last ditch effort to make a valid URL, i.e. prepend protocol
-      //     url = (url.indexOf('http') > 0 || url.indexOf('file') > 0)
-      //       ? url
-      //       : `http://${url}`;
-      //
-      //     console.log('load url', url);
-      //
-      //     // TODO(frederickk): This could likely be simplified
-      //     Utils.request('GET', url).then(response => {
-      //       Utils.load(selector, url);
-      //
-      //     }, reason => {
-      //       console.warn(`Utils.load Warning: ${reason} One last attempt to check if ${origUrl} is valid, via https://`);
-      //       url = `https://${origUrl}`;
-      //       Utils.request('GET', url).then(response => {
-      //         Utils.load(selector, url);
-      //
-      //       }, reason => {
-      //         console.error(`Utils.load Error: ${reason} ${origUrl} is not a valid URL, we tried...`);
-      //       });
-      //     });
+          const origUrl = url;
 
+          // Attempt to make a valid URL
+          url = NormalizeUrl(url);
+
+          console.log('load url', url);
+
+          Utils.request('GET', url).then(response => {
+            Utils.load(element, url);
+          }, reason => {
+            console.warn(`Utils.error: "${origUrl}" is unfortunately not a valid URL.`);
+          });
+
+          return false;
         } else {
           return false;
         }
@@ -110,14 +105,11 @@ class Utils {
       if (url) {
         element.src = url;
         element.src = element.src;
-      // } else {
-      //   // element.removeAttribute('src');
-      //   element.src = './blank.html';
       }
 
       element.onload = () => {
         if (element.src.indexOf(`${defs.devDomain}:${defs.devPort}`) > -1 || element.src.indexOf('chrome-extension://') > -1) {
-          element.removeAttribute('src');
+          // element.removeAttribute('src');
           // element.src = './blank.html';
         }
 

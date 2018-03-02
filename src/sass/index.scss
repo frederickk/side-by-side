@@ -19,9 +19,10 @@
 
 body {
   font-family: 'Space Mono', monospace;
-  height: 100%;
+  height: 100vh;
   margin: 0;
   overflow: hidden;
+  width: 100vw;
 
   &.blank {
     // background: $default-white;
@@ -31,7 +32,11 @@ body {
   }
 
   &.error {
-    background: $default-error-background;
+    // background: $default-error-background;
+    background: radial-gradient(lighten($default-error-background, 45) 15%, transparent 16%), radial-gradient(lighten($default-error-background, 45) 15%, transparent 16%), $default-white;
+    background-position: 0 0, 9px 9px;
+    background-size: 18px 18px;
+    // background: repeating-linear-gradient(45deg, lighten($default-error-background, 40), lighten($default-error-background, 40) 2px, $default-white 1px, $default-white 20px);
   }
 }
 

@@ -188,10 +188,13 @@ class SplitPane {
     const iframe = split.querySelector('iframe');
 
     const isLoaded = Utils.load(iframe, this.input.value);
+    console.log('isLoaded', isLoaded);
+    console.log('this.input', this.input.classList);
     if (isLoaded) {
       this.hasErrorState_(this.input, false);
     } else {
       this.hasErrorState_(this.input, true);
+      this.iframe.src = './load-error.html';
     }
   }
 

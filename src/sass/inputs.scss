@@ -31,6 +31,10 @@ input[type=text] {
 
   &.error {
     background-color: $default-error-background;
-    color: $default-error-color;
+    color: lighten($default-error-background, 45);
+
+    &::placeholder {
+      color: lighten($default-error-background, 45);
+    }
   }
 }
