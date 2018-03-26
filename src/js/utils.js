@@ -76,25 +76,23 @@ class Utils {
   static load(element, url='') {
     const isValid = Utils.isValidURL(url);
 
-    console.log('LOAD', url);
-
     if (element.nodeName.toLowerCase() === 'iframe') {
-      console.log('LOAD isValid', isValid);
-
       if (!isValid) {
         if (url != null || url != undefined) {
           const origUrl = url;
 
           // Attempt to make a valid URL
-          url = NormalizeUrl(url);
+          try {
+            url = NormalizeUrl(url);
 
-          console.log('load url', url);
-
-          Utils.request('GET', url).then(response => {
-            Utils.load(element, url);
-          }, reason => {
-            console.warn(`Utils.error: "${origUrl}" is unfortunately not a valid URL.`);
-          });
+            Utils.request('GET', url).then(response => {
+              Utils.load(element, url);
+            }, reason => {
+              console.warn(`Utils.error: "${origUrl}" is unfortunately not a valid URL.`);
+            });
+          } catch(err) {
+            console.warn(`Utils.error: ${url} Normalization Error:`, err);
+          }
 
           return false;
         } else {

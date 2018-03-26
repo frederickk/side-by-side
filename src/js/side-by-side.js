@@ -46,6 +46,12 @@ const optionsMenuItems_ = ['swap', 'flip', 'add'];
 class SideBySide {
   constructor() {
     /**
+     * Keep track of initial instantiation
+     * @private {boolean}
+     */
+    this.isInstatiated_ = false;
+
+    /**
      * Container for holding frames
      * @private {Element}
      */
@@ -81,11 +87,23 @@ class SideBySide {
     // To be safe, clear everything from container and start fresh
     this.container_.innerHTML = '';
 
+    if (!this.isInstatiated_) {
+      // If this is the initial load, remove any empthy string URL's first
+      this.panes_ = this.panes_.filter(item => item !== '');
+    }
+
     if (this.panes_.length === 1) {
       // this.panes_ should have a length of 2, so add an empty value
       this.panes_ = this.panes_.concat([null]);
     } else if (this.panes_.length <= 0) {
+      // or if there aren't any values add 2 null values
       this.panes_ = [null, null];
+    }
+
+    if (!this.isInstatiated_ && this.panes_.length > 2) {
+      // If this is the initial load, and there are more than 2 saved urls,
+      // trim array
+      this.panes_.splice(2);
     }
 
     this.panes_.forEach(url => {
@@ -94,6 +112,9 @@ class SideBySide {
 
     // After the panes are created, create gutter (draggable divider)
     this.createGutter_();
+
+    // Flip instantiation flag to true
+    this.isInstatiated_ = true;
   }
 
   /**
@@ -339,7 +360,16 @@ class SideBySide {
    * @param  {Event} event
    */
   addButtonHandler_(event) {
+    // Make sure this.panes_ is actually in sync
+    // TODO(frederickk): It would be better to create an event listern of sorts
+    // to ensure that this.panes_ stays 1:1 synced with what is exactly stored
+    // in local storage;
+    this.panes_ = Utils.loadArray(`${defs.prefix}pane`);
     this.panes_.push('');
+    // TODO(frederickk): Add panes respective of where button is e.g. to the
+    // right of the gutter where button is located/
+    // TODO(frederickk): Create a specific method for pane adding as opposed to
+    // using initial createPanes()
     this.createPanes_();
   }
 
