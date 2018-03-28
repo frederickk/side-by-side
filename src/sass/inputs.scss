@@ -1,6 +1,7 @@
 .input-container {
   // background-color: rgba($default-black, .09);
-  background-color: $default-grey;
+  // background-color: $default-grey;
+  background-color: $default-white;
   height: ($default-height / 2);
   opacity: 0;
   overflow: hidden;
@@ -28,6 +29,10 @@ input[type=text] {
   position: fixed;
   transition: all $default-timing ease-in-out;
   width: 100%;
+
+  &::selection {
+    background: $default-active-color;
+  }
 
   &.error {
     background-color: $default-error-background;

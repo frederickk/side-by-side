@@ -29,7 +29,8 @@ ul {
       width: $default-height;
 
       &:hover {
-        background-color: $default-grey-light;
+        background-color: $default-active-color;
+        color: $default-black;
         filter: opacity(1);
       }
     }
