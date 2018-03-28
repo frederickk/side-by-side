@@ -3,7 +3,7 @@ Side|Side
 
 ### Load sites—side by side
 
-[Download Extension](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb?hl=en-US)
+[Install Extension](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb)
 
 ![adjust](./assets/side-by-side_adjust.gif)
 
