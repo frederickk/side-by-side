@@ -1,7 +1,7 @@
-Side-by-Side
+Side|Side
 ==============
 
-### Load sites, side-by-side
+### Load sites—side by side
 
 [Download Extension](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb?hl=en-US)
 
@@ -29,8 +29,7 @@ Build
 
 
 
-Todos
+TODOs
 -------------
 
-- TODO: find solution to sites that don't allow "framing" (e.g. stackoverflow)
-- TODO: support incognito mode (https://github.com/philc/vimium/issues/1544)
+All TODOs, features, and bugs are tracked within [issues](https://github.com/frederickk/side-by-side/issues/).
