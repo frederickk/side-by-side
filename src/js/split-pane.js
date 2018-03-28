@@ -72,6 +72,7 @@ class SplitPane {
     // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
     // TODO(frederickk): Dig deeper into having <iframes> work when frame busting
     // code is implemented by site
+    // https://github.com/frederickk/side-by-side/issues/1
     // (no value)           Applies all restrictions
     // allow-forms          Re-enables form submission
     // allow-pointer-lock   Re-enables APIs

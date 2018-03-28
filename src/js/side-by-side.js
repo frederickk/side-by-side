@@ -159,7 +159,7 @@ class SideBySide {
       icon.classList.add('material-icons');
 
       // TODO(frederickk): fix this sloppiness, although it might not semantically
-      // make sense, erhpas the optionsMenuItems_ array should be a list of
+      // make sense, perhpas the optionsMenuItems_ array should be a list of
       // valid icon names e.g. ['view_agenda', 'swap_horiz', 'open_in_new']
       if (str === 'swap') {
         // icon.innerHTML = 'autorenew';
@@ -293,6 +293,7 @@ class SideBySide {
   attach_() {
     // TODO(frederickk): fix the frame busting!
     // http://stackoverflow.com/questions/958997/frame-buster-buster-buster-code-needed
+    // https://github.com/frederickk/side-by-side/issues/1
     // window.onbeforeunload = () => {
     //   document.body.dataset.reloaded++;
     //   console.warn(document.body.dataset.reloaded);
