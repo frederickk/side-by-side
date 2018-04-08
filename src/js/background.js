@@ -52,23 +52,25 @@ class Background {
    * @param  {string} orientation
    */
   open_(orientation) {
-    chrome.tabs.query({
+    browser.tabs.query({
       active: true,
       currentWindow: true,
-      highlighted: true
-    },
-    tabs => {
-      let panes = Utils.loadArray(`${defs.prefix}pane`);
-      let len = panes.length;
-      panes = [String(tabs[0].url), ...panes];
-      if (panes.length > 1) {
-        panes.splice(len);
-      }
+      // highlighted: true
+    }).then(tabs => {
+        let panes = Utils.loadArray(`${defs.prefix}pane`);
+        let len = panes.length;
+        panes = [String(tabs[0].url), ...panes];
+        if (panes.length > 1) {
+          panes.splice(len);
+        }
 
-      Utils.saveArray(`${defs.prefix}pane`, panes);
-      localStorage.setItem(`${defs.prefix}orientation`, orientation);
-    });
-    chrome.tabs.create({
+        Utils.saveArray(`${defs.prefix}pane`, panes);
+        localStorage.setItem(`${defs.prefix}orientation`, orientation);
+    }, (error) => {
+      console.error('Side|Side background.js Error: open_', error);
+    })
+
+    browser.tabs.create({
       url: './index.html'
     });
   }
@@ -79,7 +81,7 @@ class Background {
    * @return {Array}
    */
   createContextMenu_() {
-    // chrome.contextMenus.removeAll();
+    // browser.contextMenus.removeAll();
     let allContexts = [
       'page',
       'frame',
@@ -93,17 +95,17 @@ class Background {
     ];
     this.contextMenuItems_ = [];
 
-    let parent = chrome.contextMenus.create({
-      title: chrome.i18n.getMessage('extName'),
+    let parent = browser.contextMenus.create({
+      title: browser.i18n.getMessage('extName'),
       documentUrlPatterns: this.urls_,
       contexts: allContexts,
     });
     this.contextMenuItems_.push(parent);
 
-    this.contextMenuItems_.push(chrome.contextMenus.create({
+    this.contextMenuItems_.push(browser.contextMenus.create({
       type: 'normal',
       id: 'open-horizontal',
-      title: chrome.i18n.getMessage('gutterHorizontal'),
+      title: browser.i18n.getMessage('gutterHorizontal'),
       parentId: parent,
       contexts: allContexts,
       onclick: () => {
@@ -111,10 +113,10 @@ class Background {
       },
     }));
 
-    this.contextMenuItems_.push(chrome.contextMenus.create({
+    this.contextMenuItems_.push(browser.contextMenus.create({
       type: 'normal',
       id: 'open-vertical',
-      title: chrome.i18n.getMessage('gutterVertical'),
+      title: browser.i18n.getMessage('gutterVertical'),
       parentId: parent,
       contexts: allContexts,
       onclick: () => {
@@ -134,7 +136,7 @@ class Background {
   // -----------------------------------------------------------------------------
   attach_() {
     // http://stackoverflow.com/questions/15532791/getting-around-x-frame-options-deny-in-a-chrome-extension
-    chrome.webRequest.onHeadersReceived.addListener(info => {
+    browser.webRequest.onHeadersReceived.addListener(info => {
       const headers = info.responseHeaders;
       let header;
 
@@ -155,7 +157,9 @@ class Background {
 }
 
 
+
 module.exports = Background;
+
 
 
 new Background();

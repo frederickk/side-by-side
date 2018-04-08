@@ -1,6 +1,6 @@
 {
   "name": "side-by-side",
-  "version": "0.6.10",
+  "version": "0.6.12",
   "description": "Load sites—side by side",
   "main": "index.html",
   "repository": {
@@ -10,11 +10,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"NODE_ENV=development node_modules/.bin/webpack --watch\" \"webpack-dev-server --host 0.0.0.0 --port 1112\"",
-    "build": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side"
+    "build": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side all",
+    "build:chrome": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side chrome",
+    "build:firefox": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side firefox"
   },
   "keywords": [
     "chrome",
+    "firefox",
     "extension",
+    "addon",
     "utility"
   ],
   "author": "Ken Frederick <ken.frederick@gmx.de>",

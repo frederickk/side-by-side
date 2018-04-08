@@ -3,7 +3,9 @@ Side|Side
 
 ### Load sites—side by side
 
-[Install Extension](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb)
+[Install Extension for Chrome](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb)
+
+[Install AddOn for Firefox](https://addons.mozilla.org/de/firefox/addon/side-side/)
 
 ![adjust](./assets/side-by-side_adjust.gif)
 
@@ -25,11 +27,13 @@ Build
 | Command | Description |
 |-|-|
 | `$ npm run dev`   | Spin up Webpack watch task and development server ([0.0.0.0:1112](http://0.0.0.0:1112)) |
-| `$ npm run build` | Compile (and uglify) only necessary files into .zip for upload to Chrome Extension Webstore |
+| `$ npm run build` | Compile (and uglify) necessary files into .zip (Chrome) and .zip (Firefox) |
+| `$ npm run build:chrome` | Compile (and uglify) necessary files into .zip only for Chrome |
+| `$ npm run build:firefox` | Compile (and uglify) necessary files into .zip only for Firefox |
 
 
 
-TODOs
+Issues, Bugs, TODOs
 -------------
 
 All TODOs, features, and bugs are tracked within [issues](https://github.com/frederickk/side-by-side/issues/).
