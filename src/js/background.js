@@ -10,6 +10,9 @@
  *
  */
 
+// This polyfill allows for compatibility between Chrome Extension and Firefox
+// Add-on API calls
+const browser = require('webextension-polyfill');
 const defs = require('defs');
 const Utils = require('utils');
 
