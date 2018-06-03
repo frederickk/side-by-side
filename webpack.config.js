@@ -11,7 +11,11 @@ const config = {
   devtool: 'inline-sourcemap',
 
   devServer: {
-    contentBase: './src'
+    contentBase: './src',
+  },
+
+  node: {
+    global: false,
   },
 
   entry: {

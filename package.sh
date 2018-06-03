@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# $ ./package.sh foo
+# $ ./package.sh foo all
+# $ ./package.sh foo firefox
+# $ ./package.sh foo chrome
+
 NAME=$1
 PLATFORM=${2:-'all'}
 
@@ -8,32 +13,21 @@ echo $NAME
 # Zip up everything in side of ./src except ./src/css, ./src/js, and ./src/sass
 create_zip() {
   cd src
-  zip -r -X ../$1.zip * -x css\* js\* sass\*
+  zip ../$1.zip -r . ../README.md -X * -x css\* js\* sass\*
   echo "📦  $1.zip zipped"
 }
 
 
-
-# clean-up .DS_Store
+# clean-up .DS_Store files
 find . -type f -name './src/*.DS_Store' -ls -delete
 
 
-
 # package for Firefox
-# $ ./package.sh foo
-# $ ./package.sh foo all
-# $ ./package.sh foo firefox
 if [ $PLATFORM = 'firefox' ] || [ $PLATFORM = 'all' ]; then
-  # rm ./$NAME.xpi
-  # 7z a -t7z $NAME.xpi ./src/*
-  rm ./$NAME-firefox.xpi
   create_zip $NAME-firefox
 fi
 
 # package for Chrome
-# $ ./package.sh foo
-# $ ./package.sh foo all
-# $ ./package.sh foo chrome
 if [ $PLATFORM = 'chrome' ] || [ $PLATFORM = 'all' ]; then
   if [ -f ./$NAME.crx ]; then
     rm ./$NAME.crx

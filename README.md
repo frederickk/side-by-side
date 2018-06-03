@@ -1,7 +1,7 @@
 Side|Side
 ==============
 
-### Load sites—side by side
+#### Load sites—side by side
 
 [Install Extension for Chrome](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb)
 
