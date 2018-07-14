@@ -13,7 +13,7 @@ echo $NAME
 # Zip up everything in side of ./src except ./src/css, ./src/js, and ./src/sass
 create_zip() {
   cd src
-  zip ../$1.zip -r . ../README.md -X * -x css\* js\* sass\*
+  zip ../$1.zip -r . -X * -x css\* js\* sass\*
   echo "📦  $1.zip zipped"
 }
 
