@@ -12,7 +12,8 @@
     "dev": "concurrently \"NODE_ENV=development node_modules/.bin/webpack --watch\" \"webpack-dev-server --host 0.0.0.0 --port 1112\"",
     "build": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side all",
     "build:chrome": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side chrome",
-    "build:firefox": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side firefox"
+    "build:firefox": "NODE_ENV=production node_modules/.bin/webpack && ./package.sh side-by-side firefox",
+    "push": "git push origin master"
   },
   "keywords": [
     "chrome",
