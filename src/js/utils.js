@@ -1,25 +1,21 @@
-/**!
- * Side-by-Side
- * utils.js
- *
- * Ken Frederick
- * ken.frederick@gmx.de
- *
- * http://kenfrederick.de/
- * http://blog.kenfrederick.de/
- *
+'use strict';
+
+/**
+ * @fileoverview Utility class.
  */
+
+
 
 const defs = require('defs');
 const Validator = require('validator');
 const NormalizeUrl = require('normalize-url');
 
 
+
 class Utils {
   /**
    * Promisify-ed XHR request
    * http://stackoverflow.com/questions/30008114/how-do-i-promisify-native-xhr
-   * @private
    * @param  {string} method
    * @param  {string} url
    * @return {Promise}
@@ -51,25 +47,26 @@ class Utils {
 
   /**
    * Check if string is a valid URL
-   * @private
    * @param  {string}  str
    * @return {Boolean} true if valid, false otherwise
    */
   static isValidURL(str='') {
     if (str != undefined) {
-      return Validator.isURL(str, {
+      const isValid = Validator.isURL(str, {
         protocols: ['http', 'https', 'ftp', 'file', 'localhost', 'chrome', 'chrome-extension'],
         require_protocol: true,
-        require_valid_protocol: true
+        require_valid_protocol: true,
+        require_tld: false,
       });
+      return isValid;
     } else {
       return false;
     }
   }
 
   /**
-   * Load specified URL into specified frame (via selector)
-   * @param  {string}  selector
+   * Load specified URL into specified frame
+   * @param  {HTMLElement}  element
    * @param  {string}  [url='']
    * @return {Boolean} return true if URL is valid and loaded, false otherwise
    */
@@ -123,7 +120,6 @@ class Utils {
 
   /**
    * Save an array to localStorage
-   * @private
    * @param  {string} name
    * @param  {Array} val
    */
@@ -133,7 +129,6 @@ class Utils {
 
   /**
    * Load an array from localStorage
-   * @private
    * @param  {string} name
    * @return {Array} the values in localStorage
    */
@@ -150,6 +145,7 @@ class Utils {
     return Math.random().toString(len).substring(2, 15);
   }
 }
+
 
 
 module.exports = Utils;

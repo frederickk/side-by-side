@@ -1,14 +1,11 @@
-/**!
- * Side-by-Side
- * split-pane.js
- *
- * Ken Frederick
- * ken.frederick@gmx.de
- *
- * http://kenfrederick.de/
- * http://blog.kenfrederick.de/
- *
+'use strict';
+
+/**
+ * @fileoverview Class for creating a singular iframe (pane) and attaching
+ * required events and inputs.
  */
+
+
 
 const defs = require('defs');
 const Utils = require('utils');
@@ -133,15 +130,8 @@ class SplitPane {
     };
   }
 
-
-
-  // ------------------------------------------------------------------------
-  //
-  // Events
-  //
-  // ------------------------------------------------------------------------
   /**
-   * Attach event listeners to verious DOM elements
+   * Attach event listeners
    * @private
    */
   attach_() {
@@ -191,8 +181,8 @@ class SplitPane {
       this.iframe.src = './load-error.html';
     }
   }
-
 }
+
 
 
 module.exports = SplitPane;

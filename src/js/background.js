@@ -1,18 +1,16 @@
-/**!
- * Side-by-Side
- * background.js
- *
- * Ken Frederick
- * ken.frederick@gmx.de
- *
- * http://kenfrederick.de/
- * http://blog.kenfrederick.de/
- *
+'use strict';
+
+/**
+ * @fileoverview Class for handling Background tasks, such as creation of
+ * context menu items and handling of response headers.
  */
 
-// This polyfill allows for compatibility between Chrome Extension and Firefox
-// Add-on API calls
+
+
+// NOTE: This polyfill allows for compatibility between Chrome Extension and
+// Firefox Add-on API calls
 const browser = require('webextension-polyfill');
+
 const defs = require('defs');
 const Utils = require('utils');
 
@@ -22,7 +20,8 @@ class Background {
   constructor() {
     /**
      * URL matching patterns
-     * @private {Array}
+     * @private
+     * @type {Array}
      */
     this.urls_ = [
       '*://*/*'
@@ -30,6 +29,7 @@ class Background {
 
     /**
      * Chrome specific URL matching patterns
+     * @private
      * @type {Array}
      */
     this.chromeUrl_ = [
@@ -38,6 +38,7 @@ class Background {
 
     /**
      * Context menu items array
+     * @private
      * @type {Array}
      */
     this.contextMenuItems_ = [];
@@ -61,9 +62,10 @@ class Background {
       // highlighted: true
     }).then(tabs => {
         let panes = Utils.loadArray(`${defs.prefix}pane`);
-        let len = panes.length;
         panes = [String(tabs[0].url), ...panes];
-        if (panes.length > 1) {
+
+        let len = panes.length;
+        if (len > 1) {
           panes.splice(len);
         }
 
@@ -130,13 +132,10 @@ class Background {
     return this.contextMenuItems_;
   }
 
-
-
-  // -----------------------------------------------------------------------------
-  //
-  // Events
-  //
-  // -----------------------------------------------------------------------------
+  /**
+   * Attach event listeners.
+   * @return {Object}
+   */
   attach_() {
     // http://stackoverflow.com/questions/15532791/getting-around-x-frame-options-deny-in-a-chrome-extension
     browser.webRequest.onHeadersReceived.addListener(info => {
@@ -165,4 +164,5 @@ module.exports = Background;
 
 
 
+// Immediately instatiate Background.
 new Background();

@@ -28,7 +28,7 @@
 
   // left/right split
   &.gutter-horizontal {
-    background-image: url('../images/vertical.png');
+    background-image: url('./images/vertical.png');
     border-left: 1px $default-grey-light solid;
     border-right: 1px $default-grey-light solid;
     cursor: col-resize;
@@ -45,7 +45,7 @@
 
   // top/bottom split
   &.gutter-vertical {
-    background-image: url('../images/horizontal.png');
+    background-image: url('./images/horizontal.png');
     border: 0;
     border-bottom: 1px $default-grey-light solid;
     border-top: 1px $default-grey-light solid;

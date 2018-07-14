@@ -1,14 +1,11 @@
-/**!
- * Side-by-Side
- * side-by-side.js
- *
- * Ken Frederick
- * ken.frederick@gmx.de
- *
- * http://kenfrederick.de/
- * http://blog.kenfrederick.de/
- *
+'use strict';
+
+/**
+ * @fileoverview Primary class to handle creation of side by side iframes
+ * (panes).
  */
+
+
 
 const defs = require('defs');
 const Split = require('split.js')
@@ -17,29 +14,27 @@ const Utils = require('utils');
 
 
 
-// ------------------------------------------------------------------------
-//
-// Properties
-//
-// ------------------------------------------------------------------------
 /**
  * Default width of gutter
- * @private {number}
+ * @constant
+ * @type {number}
  */
-const width_ = 6;
+const WIDTH = 6;
 
 /**
  * Default height of inputs
- * @private {number}
+ * @constant
+ * @type {number}
  */
-const height_ = 42;
+const HEIGHT = 42;
 
 /**
  * Menu items for options menu
- * @private {Array}
+ * @constant
+ * @type {Array}
  */
-const optionsMenuItems_ = ['swap', 'flip', 'add'];
-// const optionsMenuItems_ = ['swap', 'flip', 'add', 'share', 'distribute'];
+const OPTIONS_MENU_ITEMS = ['swap', 'flip', 'add'];
+// const OPTIONS_MENU_ITEMS = ['swap', 'flip', 'add', 'share', 'distribute'];
 
 
 
@@ -47,25 +42,29 @@ class SideBySide {
   constructor() {
     /**
      * Keep track of initial instantiation
-     * @private {boolean}
+     * @private
+     * @type {boolean}
      */
     this.isInstatiated_ = false;
 
     /**
      * Container for holding frames
-     * @private {Element}
+     * @private
+     * @type {Element}
      */
     this.container_ = document.querySelector('#container');
 
     /**
      * The orientation of the frames, left/right, top/bottom
-     * @private {string}
+     * @private
+     * @type {string}
      */
     this.orientation_ = localStorage.getItem(`${defs.prefix}orientation`) || 'horizontal';
 
     /**
      * Load array of frame (URLs)
-     * @private {Array}
+     * @private
+     * @type {Array}
      */
     this.panes_ = Utils.loadArray(`${defs.prefix}pane`);
 
@@ -80,8 +79,7 @@ class SideBySide {
   }
 
   /**
-   * [createPanes_ description]
-   * @return {[type]} [description]
+   * Create iframes (panes).
    */
   createPanes_() {
     // To be safe, clear everything from container and start fresh
@@ -130,7 +128,7 @@ class SideBySide {
     });
 
     const split = new Split([...document.querySelectorAll('.split')], {
-      gutterSize: width_,
+      gutterSize: WIDTH,
       cursor: 'col-resize',
       direction: this.orientation_,
     });
@@ -145,13 +143,13 @@ class SideBySide {
 
   /**
    * Create options menu items
-   * @param  {[type]} parent [description]
+   * @param  {HTMLElement} parent
    */
   createOptions_(parent) {
     let optionsMenu = document.createElement('ul');
     optionsMenu.classList.add('options-menu');
 
-    optionsMenuItems_.forEach(str => {
+    OPTIONS_MENU_ITEMS.forEach(str => {
       let item = document.createElement('li');
       item.classList.add('menu-item', `${str}`, 'material-icons');
 
@@ -159,7 +157,7 @@ class SideBySide {
       icon.classList.add('material-icons');
 
       // TODO(frederickk): fix this sloppiness, although it might not semantically
-      // make sense, perhpas the optionsMenuItems_ array should be a list of
+      // make sense, perhpas the OPTIONS_MENU_ITEMS array should be a list of
       // valid icon names e.g. ['view_agenda', 'swap_horiz', 'open_in_new']
       if (str === 'swap') {
         // icon.innerHTML = 'autorenew';
@@ -269,7 +267,6 @@ class SideBySide {
   /**
    * [flipPlacement_ description]
    * @param  {Element} element
-   * @return {[type]}         [description]
    */
   flipPlacement_(element) {
     const previous = element.previousSibling;
@@ -279,15 +276,8 @@ class SideBySide {
     element.before(next);
   }
 
-
-
-  // ------------------------------------------------------------------------
-  //
-  // Events
-  //
-  // ------------------------------------------------------------------------
   /**
-   * Attach event listeners to verious DOM elements
+   * Attach event listeners
    * @private
    */
   attach_() {
@@ -324,12 +314,12 @@ class SideBySide {
    * @param  {Event} event
    */
   gutterMouseoverHandler_(event) {
-    const threshold = height_ * optionsMenuItems_.length;
+    const threshold = HEIGHT * OPTIONS_MENU_ITEMS.length;
 
     if (this.classList.contains('gutter-horizontal') && event.clientY <= threshold) {
-      this.style.width = `${height_}px`;
+      this.style.width = `${HEIGHT}px`;
     } else if (this.classList.contains('gutter-vertical') && event.clientX <= threshold) {
-      this.style.height = `${height_}px`;
+      this.style.height = `${HEIGHT}px`;
     }
   }
 
@@ -340,9 +330,9 @@ class SideBySide {
    */
   gutterMouseoutHandler_(event) {
     if (this.classList.contains('gutter-horizontal')) {
-      this.style.width = `${width_}px`;
+      this.style.width = `${WIDTH}px`;
     } else if (this.classList.contains('gutter-vertical')) {
-      this.style.height = `${width_}px`;
+      this.style.height = `${WIDTH}px`;
     }
   }
 
@@ -382,6 +372,7 @@ class SideBySide {
   shareButtonHandler_(event) {
   }
 }
+
 
 
 module.exports = SideBySide;

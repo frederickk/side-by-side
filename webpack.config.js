@@ -21,8 +21,8 @@ const config = {
   entry: {
     background: path.join(__dirname, './src/js/background.js'),
     index: [
-      path.join(__dirname, './src/js/index.js'),
-      path.join(__dirname, './src/sass/index.scss'),
+      path.join(__dirname, './src/index.js'),
+      path.join(__dirname, './src/index.scss'),
     ],
   },
 
