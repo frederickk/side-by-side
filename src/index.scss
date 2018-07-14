@@ -1,21 +1,11 @@
-//
-// Side-by-Side
-// main.css
-//
-// Ken Frederick
-// ken.frederick@gmx.de
-//
-// http://kenfrederick.de/
-// http://blog.kenfrederick.de/
-//
-//
-
 @import url('https://fonts.googleapis.com/css?family=Material+Icons|Space+Mono&subset=latin');
 
-@import 'variables';
-@import 'split';
-@import 'inputs';
-@import 'options';
+@import 'sass/variables';
+@import 'sass/split';
+@import 'sass/inputs';
+@import 'sass/options';
+
+
 
 body {
   font-family: 'Space Mono', monospace;

@@ -1,21 +1,21 @@
 {
-    "extName": {
-      "message": "Side|Side",
-      "description": "Extension name"
-    },
-    "extDesc": {
-      "message": "Webseiten nebeneinander laden.",
-      "description": "Extension description"
-    },
-    "detailDesc": {
-      "message": "Ein verstecktes Menü befindet sich oben (oder links, je nach Ausrichtung) womit man die Ausrichtung oder die Positionierung der Frames bestimmen kann oder sogar ein neues Frame hinzufügen.",
-      "description": "Detailed description"
-    },
+  "extName": {
+    "message": "Side|Side",
+    "description": "Extension name"
+  },
+  "extDesc": {
+    "message": "Webseiten nebeneinander laden.",
+    "description": "Extension description"
+  },
+  "detailDesc": {
+    "message": "Ein verstecktes Menü befindet sich oben (oder links, je nach Ausrichtung) womit man die Ausrichtung oder die Positionierung der Frames bestimmen kann oder sogar ein neues Frame hinzufügen.",
+    "description": "Detailed description"
+  },
 
-    "gutterVertical": {
-        "message": "Öffnen mit oben/unten Teilung"
-    },
-    "gutterHorizontal": {
-        "message": "Öffnen mit links/rechts Teilung"
-    }
+  "gutterVertical": {
+    "message": "Öffnen mit oben/unten Teilung"
+  },
+  "gutterHorizontal": {
+    "message": "Öffnen mit links/rechts Teilung"
+  }
 }
