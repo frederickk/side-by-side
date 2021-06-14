@@ -1,23 +1,20 @@
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin');
+// const webpack = require('webpack');
 
-const production = (process.env.NODE_ENV === 'production');
+const mode = (process.env.NODE_ENV === 'production')
+    ? 'production'
+    : 'development';
 
 const config = {
-  watch: production ? false : true,
+  mode,
+  // watch: mode ? false : true,
   cache: true,
-  devtool: 'inline-sourcemap',
-
   devServer: {
     contentBase: './src',
   },
-
-  node: {
-    global: false,
-  },
-
   entry: {
     background: path.join(__dirname, './src/js/background.js'),
     index: [
@@ -25,66 +22,52 @@ const config = {
       path.join(__dirname, './src/index.scss'),
     ],
   },
-
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].min.css',
+    }),
+  ],
   resolve: {
-    modules: [
-      path.resolve(__dirname, './src/js'),
-      path.resolve(__dirname, './src/sass'),
-      'node_modules',
-    ]
+    extensions: ['.js'],
   },
-
+  module: {
+    rules: [{
+      test: /\.js$/i,
+      use: 'babel-loader',
+      exclude: [/node_modules/],
+    }, {
+      test: /\.(sa|sc|c)ss$/i,
+      use: [
+        'extract-loader',
+        'css-loader',
+        'sass-loader'
+      ],
+    }, {
+      test: /\.(sa|sc|c)ss$/i,
+      use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+    }, {
+      test: /\.(png|jpg|jpe?g|gif)$/i,
+      type: 'asset/resource',
+    }, {
+      test: /\.(woff|woff2|eot|ttf|otf|svg)$/i,
+      type: 'asset/inline',
+    }],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      }),
+      new CssMinimizerPlugin(),
+    ],
+  },
   output: {
     path: path.join(__dirname, './src'),
     publicPath: './src',
     filename: './[name].min.js',
+    assetModuleFilename: 'images/[name][ext]',
   },
-
-  module: {
-    rules: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-      query: {},
-    }, {
-      test: /\.(css|sass|scss)$/,
-      exclude: /node_modules/,
-      use: ExtractTextPlugin.extract({
-        use: [(production) ? {
-          loader: 'css-loader',
-          options: {
-            minimize: true
-          }
-        } : 'css-loader', 'sass-loader']
-      }),
-    }, {
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader', 'postcss-loader']
-    }, {
-      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-      loader: 'url-loader?limit=100000'
-    }],
-  },
-
-  plugins: production ? [
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false,
-        },
-      },
-    }),
-    new ExtractTextPlugin({
-      filename: './index.min.css',
-      allChunks: true,
-    }),
-  ] : [
-    new ExtractTextPlugin({
-      filename: './index.min.css',
-      allChunks: true,
-    }),
-  ],
 };
-
 
 module.exports = config;

@@ -5,14 +5,10 @@
  * (panes).
  */
 
-
-
-const defs = require('defs');
+const defs = require('./defs');
 const Split = require('split.js')
-const SplitPane = require('split-pane');
-const Utils = require('utils');
-
-
+const SplitPane = require('./split-pane');
+const Utils = require('./utils');
 
 /**
  * Default width of gutter
@@ -35,8 +31,6 @@ const HEIGHT = 42;
  */
 const OPTIONS_MENU_ITEMS = ['swap', 'flip', 'add'];
 // const OPTIONS_MENU_ITEMS = ['swap', 'flip', 'add', 'share', 'distribute'];
-
-
 
 class SideBySide {
   constructor() {
@@ -372,7 +366,5 @@ class SideBySide {
   shareButtonHandler_(event) {
   }
 }
-
-
 
 module.exports = SideBySide;

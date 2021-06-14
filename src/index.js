@@ -1,4 +1,4 @@
-const SideBySide = require('side-by-side');
+const SideBySide = require('./js/side-by-side');
 
 new SideBySide();
 

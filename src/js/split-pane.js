@@ -5,12 +5,8 @@
  * required events and inputs.
  */
 
-
-
-const defs = require('defs');
-const Utils = require('utils');
-
-
+const defs = require('./defs');
+const Utils = require('./utils');
 
 class SplitPane {
   constructor() {
@@ -182,7 +178,5 @@ class SplitPane {
     }
   }
 }
-
-
 
 module.exports = SplitPane;

@@ -5,16 +5,11 @@
  * context menu items and handling of response headers.
  */
 
-
-
 // NOTE: This polyfill allows for compatibility between Chrome Extension and
 // Firefox Add-on API calls
 const browser = require('webextension-polyfill');
-
-const defs = require('defs');
-const Utils = require('utils');
-
-
+const defs = require('./defs');
+const Utils = require('./utils');
 
 class Background {
   constructor() {
@@ -158,11 +153,7 @@ class Background {
   }
 }
 
-
-
 module.exports = Background;
-
-
 
 // Immediately instatiate Background.
 new Background();

@@ -4,13 +4,9 @@
  * @fileoverview Utility class.
  */
 
-
-
-const defs = require('defs');
+const defs = require('./defs');
 const Validator = require('validator');
 const NormalizeUrl = require('normalize-url');
-
-
 
 class Utils {
   /**
@@ -145,7 +141,5 @@ class Utils {
     return Math.random().toString(len).substring(2, 15);
   }
 }
-
-
 
 module.exports = Utils;
