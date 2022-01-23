@@ -1,81 +1,62 @@
-'use strict';
+import Split from 'split.js';
+import {prefix} from './defs';
+import {SplitPane} from './split-pane';
+import {load, loadArray, randomStr} from './utils';
+
+interface Gutter {
+  (item: HTMLElement): void;
+}
 
 /**
- * @fileoverview Primary class to handle creation of side by side iframes
- * (panes).
- */
-
-const defs = require('./defs');
-const Split = require('split.js')
-const SplitPane = require('./split-pane');
-const Utils = require('./utils');
-
-/**
- * Default width of gutter
- * @constant
- * @type {number}
+ * Default width of gutter.
  */
 const WIDTH = 6;
 
 /**
- * Default height of inputs
- * @constant
- * @type {number}
+ * Default height of inputs.
  */
 const HEIGHT = 42;
 
 /**
- * Menu items for options menu
- * @constant
- * @type {Array}
+ * Menu items for options menu.
  */
 const OPTIONS_MENU_ITEMS = ['swap', 'flip', 'add'];
 // const OPTIONS_MENU_ITEMS = ['swap', 'flip', 'add', 'share', 'distribute'];
 
-class SideBySide {
+export class SideBySide {
+  /**
+   * Keep track of initial instantiation.
+   */
+  private isInstatiated_ = false;
+
+  /**
+   * Container for holding frames.
+   */
+  private container_: HTMLElement = document.querySelector('#container');
+
+  /**
+   * Orientation of the frames, left/right, top/bottom.
+   */
+  private orientation_: string = 'horizontal';
+
+  /**
+   * Array of frame (URLs).
+   */
+  private panes_: Array<any> = loadArray(`${prefix}pane`);
+
   constructor() {
-    /**
-     * Keep track of initial instantiation
-     * @private
-     * @type {boolean}
-     */
-    this.isInstatiated_ = false;
+    this.orientation_ =
+        localStorage.getItem(`${prefix}orientation`) || 'horizontal';
 
-    /**
-     * Container for holding frames
-     * @private
-     * @type {Element}
-     */
-    this.container_ = document.querySelector('#container');
-
-    /**
-     * The orientation of the frames, left/right, top/bottom
-     * @private
-     * @type {string}
-     */
-    this.orientation_ = localStorage.getItem(`${defs.prefix}orientation`) || 'horizontal';
-
-    /**
-     * Load array of frame (URLs)
-     * @private
-     * @type {Array}
-     */
-    this.panes_ = Utils.loadArray(`${defs.prefix}pane`);
-
-    // Create/inject panes into #container
     this.createPanes_();
-
-    // Set orientation of frames
     this.setOrientation(this.orientation_);
-
-    // Add event listeners to key DOM elements
     this.attach_();
   }
 
   /**
-   * Create iframes (panes).
+   * Creates/injects panes into #container.
    */
-  createPanes_() {
+  private createPanes_() {
     // To be safe, clear everything from container and start fresh
     this.container_.innerHTML = '';
 
@@ -110,36 +91,39 @@ class SideBySide {
   }
 
   /**
-   * Create gutter and instantiate Split.js class to handle window dividing
-   * @private
+   * Creates gutter and instantiate Split.js class to handle window dividing.
    */
-  createGutter_() {
-    let gutter;
-
+  private createGutter_() {
     // If a gutter(s) already exists, remove it(them).
-    this.adjustGutters_(gutter => {
+    this.adjustGutters_((gutter: HTMLElement) => {
       gutter.parentElement.removeChild(gutter);
     });
 
-    const split = new Split([...document.querySelectorAll('.split')], {
+    const elemArray: Array<HTMLElement> =
+        Array.from(document.querySelectorAll('.split'));
+
+    Split([...elemArray], {
       gutterSize: WIDTH,
       cursor: 'col-resize',
+      // TODO (frederickk): fix type declaration of orientation_.
+      //@ts-ignore
       direction: this.orientation_,
     });
 
     // create options menu within gutter
-    this.adjustGutters_(gutter => {
-      gutter.addEventListener('mouseover', this.gutterMouseoverHandler_, false);
-      gutter.addEventListener('mouseout', this.gutterMouseoutHandler_, false);
+    this.adjustGutters_((gutter: HTMLElement) => {
+      gutter.addEventListener('mouseover',
+          this.gutterMouseoverHandler_.bind(this), false);
+      gutter.addEventListener('mouseout',
+          this.gutterMouseoutHandler_.bind(this), false);
       this.createOptions_(gutter);
     });
   }
 
   /**
-   * Create options menu items
-   * @param  {HTMLElement} parent
+   * Creates options menu items.
    */
-  createOptions_(parent) {
+  private createOptions_(parent: HTMLElement) {
     let optionsMenu = document.createElement('ul');
     optionsMenu.classList.add('options-menu');
 
@@ -150,29 +134,34 @@ class SideBySide {
       let icon = document.createElement('i');
       icon.classList.add('material-icons');
 
-      // TODO(frederickk): fix this sloppiness, although it might not semantically
-      // make sense, perhpas the OPTIONS_MENU_ITEMS array should be a list of
-      // valid icon names e.g. ['view_agenda', 'swap_horiz', 'open_in_new']
+      // TODO(frederickk): fix this sloppiness, although it might not
+      // semantically make sense, perhpas the OPTIONS_MENU_ITEMS array should be
+      // a list of valid icon names e.g.:
+      // ['view_agenda', 'swap_horiz', 'open_in_new']
       if (str === 'swap') {
         // icon.innerHTML = 'autorenew';
         // icon.innerHTML = 'vertical_align_center';
         icon.innerHTML = 'view_agenda';
-        item.addEventListener('click', this.swapOrientation.bind(this), false);
+        item.addEventListener('click',
+            this.swapOrientation.bind(this), false);
 
       } else if (str === 'flip') {
         icon.innerHTML = 'swap_horiz';
         // icon.innerHTML = 'flip';
-        item.addEventListener('click', this.flipButtonHandler_.bind(this), false);
+        item.addEventListener('click',
+            this.flipButtonHandler_.bind(this), false);
 
       } else if (str === 'add') {
         icon.innerHTML = 'add';
-        item.addEventListener('click', this.addButtonHandler_.bind(this), false);
+        item.addEventListener('click',
+            this.addButtonHandler_.bind(this), false);
 
       } else if (str === 'share') {
         // icon.innerHTML = 'share';
         // icon.innerHTML = 'web';
         icon.innerHTML = 'open_in_new';
-        item.addEventListener('click', this.shareButtonHandler_.bind(this), false);
+        item.addEventListener('click',
+            this.shareButtonHandler_.bind(this), false);
       }
 
       item.appendChild(icon);
@@ -183,12 +172,9 @@ class SideBySide {
   }
 
   /**
-   * Loop through all gutters and use callback to adjust individually
-   * @private
-   * @param  {Function} callback
-   * @param  {string}   [selector='.gutter']
+   * Loops through all gutters and use callback to adjust individually.
    */
-  adjustGutters_(callback, selector='.gutter') {
+  private adjustGutters_(callback: Gutter, selector = '.gutter') {
     let gutter;
 
     try {
@@ -202,22 +188,19 @@ class SideBySide {
   }
 
   /**
-   * Add a pane
-   * @param {string} url
+   * Adds a pane.
    */
-  add(url) {
-    const id = `${defs.prefix}${Utils.randomStr()}`;
-
-    // Create pane and add to parent (.container)
-    let pane = new SplitPane(defs.prefix);
+  add(url: string) {
+    const id = `${prefix}${randomStr()}`;
+    const pane = new SplitPane();
     pane.create(this.container_, id);
 
     // Load pane with content
-    Utils.load(pane.iframe, url);
+    load(pane.iframe, url);
   }
 
   /**
-   * Set orientation of frames
+   * Sets orientation of frames.
    */
   setOrientation(orientation) {
     if (orientation === 'horizontal') {
@@ -227,14 +210,14 @@ class SideBySide {
       this.container_.classList.remove('split-horizontal');
       this.container_.classList.add('split-vertical');
     }
-    localStorage.setItem(`${defs.prefix}orientation`, orientation);
+    localStorage.setItem(`${prefix}orientation`, orientation);
 
     // Update gutter orientation, i.e. re-create gutter
     this.createGutter_();
 
     // Update pane sizes to maintain proportions set by user before swapping
     // orientation
-    document.querySelectorAll('.split').forEach(pane => {
+    document.querySelectorAll('.split').forEach((pane: HTMLElement) => {
       if (orientation == 'horizontal') {
         pane.style.width = pane.style.height;
         pane.style.height = '';
@@ -246,9 +229,9 @@ class SideBySide {
   }
 
   /**
-   * Toggle orientation of frames  top/bottom <--> left/right
+   * Toggles orientation of frames  top/bottom <--> left/right.
    */
-  swapOrientation() {
+  swapOrientation(): string {
     if (this.orientation_ === 'horizontal') {
       this.orientation_ = 'vertical';
     } else {
@@ -256,13 +239,14 @@ class SideBySide {
     }
 
     this.setOrientation(this.orientation_);
+
+    return this.orientation_;
   }
 
   /**
-   * [flipPlacement_ description]
-   * @param  {Element} element
+   * Flips placement of element with sibling.
    */
-  flipPlacement_(element) {
+  private flipPlacement_(element: HTMLElement) {
     const previous = element.previousSibling;
     const next = element.nextSibling;
 
@@ -271,10 +255,9 @@ class SideBySide {
   }
 
   /**
-   * Attach event listeners
-   * @private
+   * Attaches event listeners.
    */
-  attach_() {
+  private attach_() {
     // TODO(frederickk): fix the frame busting!
     // http://stackoverflow.com/questions/958997/frame-buster-buster-buster-code-needed
     // https://github.com/frederickk/side-by-side/issues/1
@@ -303,53 +286,52 @@ class SideBySide {
   }
 
   /**
-   * Handler for gutter on mouseover
-   * @private
-   * @param  {Event} event
+   * Handler for gutter on mouseover.
    */
-  gutterMouseoverHandler_(event) {
+  private gutterMouseoverHandler_(event: MouseEvent) {
+    const target = <HTMLElement>event.target;
     const threshold = HEIGHT * OPTIONS_MENU_ITEMS.length;
 
-    if (this.classList.contains('gutter-horizontal') && event.clientY <= threshold) {
-      this.style.width = `${HEIGHT}px`;
-    } else if (this.classList.contains('gutter-vertical') && event.clientX <= threshold) {
-      this.style.height = `${HEIGHT}px`;
+    if (target.classList.contains('gutter-horizontal') &&
+        event.clientY <= threshold) {
+      target.style.width = `${HEIGHT}px`;
+    } else if (target.classList.contains('gutter-vertical') &&
+        event.clientX <= threshold) {
+      target.style.height = `${HEIGHT}px`;
     }
   }
 
   /**
-   * Handler for gutter on mouseout
-   * @private
-   * @param  {Event} event
+   * Handler for gutter on mouseout.
    */
-  gutterMouseoutHandler_(event) {
-    if (this.classList.contains('gutter-horizontal')) {
-      this.style.width = `${WIDTH}px`;
-    } else if (this.classList.contains('gutter-vertical')) {
-      this.style.height = `${WIDTH}px`;
+  private gutterMouseoutHandler_(event: Event) {
+    const target = <HTMLElement>event.target;
+
+    if (target.classList.contains('gutter-horizontal')) {
+      target.style.width = `${WIDTH}px`;
+    } else if (target.classList.contains('gutter-vertical')) {
+      target.style.height = `${WIDTH}px`;
     }
   }
 
   /**
-   * Handler for flipping the placement of two adjacent <iframes>
-   * @private
-   * @param  {Event} event
+   * Handler for flipping the placement of two adjacent <iframes>.
    */
-  flipButtonHandler_(event) {
-    this.flipPlacement_(event.target.closest('.gutter'));
+  private flipButtonHandler_(event: Event) {
+    const target = <HTMLElement>event.target;
+
+    this.flipPlacement_(target.closest('.gutter'));
   }
 
   /**
-   * Handler for adding additional split pane
-   * @private
-   * @param  {Event} event
+   * Handler for adding additional split pane.
    */
-  addButtonHandler_(event) {
+  private addButtonHandler_() {
     // Make sure this.panes_ is actually in sync
     // TODO(frederickk): It would be better to create an event listern of sorts
     // to ensure that this.panes_ stays 1:1 synced with what is exactly stored
     // in local storage;
-    this.panes_ = Utils.loadArray(`${defs.prefix}pane`);
+    this.panes_ = loadArray(`${prefix}pane`);
     this.panes_.push('');
     // TODO(frederickk): Add panes respective of where button is e.g. to the
     // right of the gutter where button is located/
@@ -360,11 +342,8 @@ class SideBySide {
 
   /**
    * Handler for opening split as shareable live URL
-   * @private
-   * @param  {Event} event
+   * TODO (frederickk).
    */
-  shareButtonHandler_(event) {
+  private shareButtonHandler_() {
   }
 }
-
-module.exports = SideBySide;

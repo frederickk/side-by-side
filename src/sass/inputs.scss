@@ -23,7 +23,7 @@
 input[type=text] {
   background-color: transparent;
   border: 0;
-  font-family: 'Space Mono', monospace;
+  font-family: $default-font-family;
   height: 18px;
   padding: 12px;
   position: fixed;

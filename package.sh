@@ -10,17 +10,15 @@ PLATFORM=${2:-'all'}
 
 echo $NAME
 
-# Zip up everything in side of ./src except ./src/css, ./src/js, and ./src/sass
+# Zip up everything in side of ./src except ./src/css, ./src/js, ./src/ts, and ./src/sass
 create_zip() {
   cd src
-  zip ../$1.zip -r . -X * -x css\* js\* sass\*
+  zip ../$1.zip -r . -X * -x css\* js\* ts\* sass\*
   echo "📦  $1.zip zipped"
 }
 
-
 # clean-up .DS_Store files
 find . -type f -name './src/*.DS_Store' -ls -delete
-
 
 # package for Firefox
 if [ $PLATFORM = 'firefox' ] || [ $PLATFORM = 'all' ]; then
@@ -43,6 +41,5 @@ if [ $PLATFORM = 'chrome' ] || [ $PLATFORM = 'all' ]; then
   rm ./$NAME-chrome.zip
   create_zip $NAME-chrome
 fi
-
 
 echo "📦 👍  $NAME Packaging complete!"

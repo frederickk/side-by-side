@@ -1,40 +1,16 @@
-'use strict';
+import {prefix} from './defs';
+import {load, saveArray} from './utils';
 
-/**
- * @fileoverview Class for creating a singular iframe (pane) and attaching
- * required events and inputs.
- */
+export class SplitPane {
+  public iframeContainer = <HTMLIFrameElement>document.createElement('div');
+  public iframe = <HTMLIFrameElement>document.createElement('iframe');
+  public inputContainer = <HTMLElement>document.createElement('div');
+  public input = <HTMLInputElement>document.createElement('input');
 
-const defs = require('./defs');
-const Utils = require('./utils');
-
-class SplitPane {
   constructor() {
-    /**
-     * <iframe> container
-     * @type {Element}
-     */
-    this.iframeContainer = document.createElement('div');
     this.iframeContainer.classList.add('split');
-
-    /**
-     * The <iframe> to hold the content/site
-     * @type {Element}
-     */
-    this.iframe = document.createElement('iframe');
-
-    /**
-     * <input> field container
-     * @type {Element}
-     */
-    this.inputContainer = document.createElement('div');
     this.inputContainer.classList.add('input-container');
 
-    /**
-     * <input> field (e.g. URL holder)
-     * @type {Element}
-     */
-    this.input = document.createElement('input');
     this.input.type = 'text';
     this.input.value = '';
 
@@ -43,11 +19,9 @@ class SplitPane {
   }
 
   /**
-   * Create all of the elements for each split pane
-   * @param  {Element} parent
-   * @param  {string} [id='']
+   * Creates all of the elements for each split pane.
    */
-  create(parent, id='') {
+  create(parent: HTMLElement, id = '') {
     this.iframeContainer.id = id;
 
     this.input.id = this.input.name = `input-${id}`;
@@ -68,7 +42,8 @@ class SplitPane {
     // allow-same-origin    Allows the iframe content to be treated as being from the same origin
     // allow-scripts        Re-enables scripts
     // allow-top-navigation Allows the iframe content to navigate its top-level browsing context
-    this.iframe.setAttribute('sandbox', 'allow-forms allow-same-origin allow-scripts');
+    this.iframe.setAttribute('sandbox',
+        'allow-forms allow-same-origin allow-scripts');
 
     // See if content is loaded
     this.isReloaded_(this.iframe);
@@ -80,13 +55,11 @@ class SplitPane {
   }
 
   /**
-   * Check if Element has an error state
-   * @private
-   * @param  {Element} element
-   * @param  {Boolean} isError
-   * @return {Boolean}
+   * Checks if input element has an error state.
    */
-  hasErrorState_(element, isError) {
+  private hasErrorState_(element: HTMLInputElement,
+        isError: boolean): boolean {
+
     if (element.value != '') {
       if (isError && !element.classList.contains('error')) {
         element.classList.add('error');
@@ -101,37 +74,34 @@ class SplitPane {
   }
 
   /**
-   * Add onLoad event to keep track of how many times the content of an element
-   * is (re)loaded
-   * @private
-   * @param  {Element}  element
+   * Adds onLoad event to keep track of how many times the content of an element
+   * is (re)loaded.
    */
-  isReloaded_(element) {
-    element.dataset.reloaded = 0;
-
-    let id = element.id;
+  private isReloaded_(element: HTMLElement) {
+    element.dataset.reloaded = (0).toString();
 
     element.onload = () => {
-      let reloaded = element.dataset.reloaded;
-      element.dataset.reloaded++;
+      let reloadAmt = parseInt(element.dataset.reloaded);
+      reloadAmt++;
+      element.dataset.reloaded = reloadAmt.toString();
 
-      // if (reloaded > 0) {
+      if (reloadAmt > 0) {
       //   element.src = './load-error.html';
       //   console.warn('stop', element.document);
       //   // element.stop();
       //   element.setAttribute('sandbox', '');
       //   window.frames[1].stop();
       //   window.stop();
-      // }
+      }
     };
   }
 
   /**
-   * Attach event listeners
-   * @private
+   * Attaches event listeners.
    */
-  attach_() {
-    this.iframe.addEventListener('paneload', this.iframePaneloadHandler_.bind(this));
+  private attach_() {
+    this.iframe.addEventListener('paneload',
+        this.iframePaneloadHandler_.bind(this));
 
     this.input.addEventListener('blur', this.inputInputHandler_.bind(this));
     this.input.addEventListener('keypress', event => {
@@ -143,33 +113,32 @@ class SplitPane {
   }
 
   /**
-   * Handler for custom <iframe> 'paneload' Events; iterates through every <input> in the
-   * DOM and saves them in localStorage as an array.
-   * @param  {Event} event
+   * Handler for custom <iframe> 'paneload' Events; iterates through every
+   * <input> in the DOM and saves them in localStorage as an array.
    */
-  iframePaneloadHandler_(event) {
+  private iframePaneloadHandler_() {
     const split = this.iframe.closest('.split');
     const input = split.querySelector('input');
 
     input.value = this.iframe.src;
 
     let srcArray = [];
-    document.querySelectorAll('.split input').forEach(input => {
+    document.querySelectorAll('.split input').forEach(
+          (input: HTMLInputElement) => {
       srcArray.push(input.value);
     });
 
-    Utils.saveArray(`${defs.prefix}pane`, srcArray);
+    saveArray(`${prefix}pane`, srcArray);
   }
 
   /**
-   * Handler for <input> that
-   * @param  {Event} event
+   * Handler for URL <input>.
    */
-  inputInputHandler_(event) {
+  private inputInputHandler_() {
     const split = this.input.closest('.split');
     const iframe = split.querySelector('iframe');
 
-    const isLoaded = Utils.load(iframe, this.input.value);
+    const isLoaded = load(iframe, this.input.value);
     if (isLoaded) {
       this.hasErrorState_(this.input, false);
     } else {
@@ -178,5 +147,3 @@ class SplitPane {
     }
   }
 }
-
-module.exports = SplitPane;

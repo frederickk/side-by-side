@@ -1,0 +1,22 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "lib": ["ES2016", "dom"],
+    "target": "es5",
+    "outDir": "client/static",
+    "rootDir": "./",
+    "declaration": false,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+  },
+  "compileOnSave": false,
+  "include": [
+    "./**/*.ts"
+, "server/cloud-storage.ts"  ],
+  "exclude": [
+    "./**/*_test.ts"
+  ]
+}

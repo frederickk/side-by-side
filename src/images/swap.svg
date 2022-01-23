@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45 45">
     <style type="text/css">
-    	.stroke{fill:none;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+    	.stroke{fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:square;stroke-miterlimit:10;}
     </style>
     <polyline class="stroke" points="35.5,16.2 32.7,21.6 27.3,18.7 "/>
     <polyline class="stroke" points="9.5,28.8 12.3,23.4 17.7,26.3 "/>

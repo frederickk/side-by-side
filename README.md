@@ -1,7 +1,9 @@
 Side|Side
 ==============
 
-#### Load sites—side by side
+## Load sites—side by side
+
+**v0.7.0**
 
 [Install Extension for Chrome](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb)
 
@@ -15,25 +17,23 @@ A discrete options menu is located at the top (or left, depending on orientation
 
 ![options](assets/side-by-side_chrome_options.gif)
 
-| Rotate orientation of panes—left/right or top/bottom.        | Flip position of panes.                              | Add a pane.                                        |
-| ------------------------------------------------------------ | ---------------------------------------------------- | -------------------------------------------------- |
+| Rotate orientation of panes—left/right or top/bottom.       | Flip position of panes.                              | Add a pane.                                        |
+| :------------------------------------------------------------: | :----------------------------------------------------: | :--------------------------------------------------: |
 | ![Orientation](assets/side-by-side_chrome_options_orientation-crop.png) | ![Flip](assets/side-by-side_chrome_options_flip-crop.png) | ![Add](assets/side-by-side_chrome_options_add-crop.png) |
 
 
 
-Build
--------------
+### Build
 
-| Command | Description |
-|-|-|
-| `$ npm run dev`   | Spin up Webpack watch task and development server ([0.0.0.0:1112](http://0.0.0.0:1112)) |
-| `$ npm run build` | Compile (and uglify) necessary files into .zip (Chrome) and .zip (Firefox) |
-| `$ npm run build:chrome` | Compile (and uglify) necessary files into .zip only for Chrome |
-| `$ npm run build:firefox` | Compile (and uglify) necessary files into .zip only for Firefox |
+| Command                   | Description                                                                             |
+| ------------------------- | ----------------------------------------------------------------------------------------|
+| `$ npm run dev`           | Spin up Webpack watch task and development server ([0.0.0.0:1112](http://0.0.0.0:1112)) |
+| `$ npm run build`         | Compile (and uglify) necessary files                                                    |
+| `$ npm run build:all`     | Compile (and uglify) necessary files into .zip (Chrome) and .zip (Firefox)              |
+| `$ npm run build:chrome`  | Compile (and uglify) necessary files into .zip only for Chrome                          |
+| `$ npm run build:firefox` | Compile (and uglify) necessary files into .zip only for Firefox                         |
 
 
-
-Issues, Bugs, TODOs
--------------
+### Issues, Bugs, TODOs
 
 All TODOs, features, and bugs are tracked within [issues](https://github.com/frederickk/side-by-side/issues/).

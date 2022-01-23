@@ -1,13 +1,13 @@
 @use 'sass:math';
 
 @import url('https://fonts.googleapis.com/css?family=Material+Icons|Space+Mono&subset=latin');
-@import 'sass/variables';
+@import 'sass/defs';
 @import 'sass/split';
 @import 'sass/inputs';
 @import 'sass/options';
 
 body {
-  font-family: 'Space Mono', monospace;
+  font-family: $default-font-family;
   height: 100vh;
   margin: 0;
   overflow: hidden;

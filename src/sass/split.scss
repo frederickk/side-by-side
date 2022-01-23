@@ -35,6 +35,12 @@
     height: 100%;
     width: $default-gutter-width;
 
+    &:hover {
+      // TODO (frederickk): Fix the inelegance of !important, caused by how
+      // split.js handles mouseover.
+      width: 45px !important;
+    }
+
     .options {
       border-bottom: 1px $default-grey-light solid;
       height: $default-height;
@@ -52,6 +58,12 @@
     cursor: row-resize;
     height: $default-gutter-width;
     width: 100%;
+
+    &:hover {
+      // TODO (frederickk): Fix the inelegance of !important, caused by how
+      // split.js handles mouseover.
+      height: 45px !important;
+    }
 
     .options {
       border-right: 1px $default-grey-light solid;

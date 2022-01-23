@@ -1,25 +1,21 @@
 // Lifted nearly verbatim from https://github.com/google-developer-training/pwa-training-labs/tree/master/cache-api-lab
+// TODO (frederickk): With Manifest v3, should this be moved to background.ts.
 
 (function() {
-  'use strict';
-
   /**
    * Files and URLs to cache
-   * @type {Array}
    */
-  const filesToCache = [
+  const filesToCache: Array<string> = [
     'https://fonts.googleapis.com/css?family=Material+Icons|Space+Mono&subset=latin',
   ];
 
   /**
    * Name of the cache
-   * @type {string}
    */
   const staticCacheName = 'side-by-side-cache';
 
   /**
    * Install service worker and cache static assets
-   * @type {[type]}
    */
   self.addEventListener('install', event => {
     console.log('Attempting to install service worker and cache static assets');
@@ -30,7 +26,6 @@
 
   /**
    * Fetch cached assets
-   * @type {[type]}
    */
   self.addEventListener('fetch', event => {
     event.respondWith(caches.match(event.request).then(response => {
@@ -54,7 +49,6 @@
 
   /**
    * Activate/create service worker
-   * @type {[type]}
    */
   self.addEventListener('activate', event => {
     console.log('Activating new service worker...');
