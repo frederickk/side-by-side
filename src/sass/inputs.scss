@@ -2,7 +2,7 @@
   // background-color: rgba($default-black, .09);
   // background-color: $default-grey;
   background-color: $default-white;
-  height: ($default-height / 2);
+  height: math.div($default-height, 2);
   opacity: 0;
   overflow: hidden;
   position: absolute;
