@@ -1,4 +1,4 @@
-import {contextMenus, i18n, Menus, tabs, webRequest} from 'webextension-polyfill';
+import {contextMenus, i18n, Menus, tabs, declarativeNetRequest} from 'webextension-polyfill';
 import {prefix} from './defs';
 import {loadArray, saveArray} from './utils';
 
@@ -7,28 +7,26 @@ const URLS: Array<string> = [
   '*://*/*'
 ];
 
-webRequest.onHeadersReceived.addListener(info => {
-  const headers = info.responseHeaders;
-  let header: any;
+const rules: declarativeNetRequest.Rule[] = [{
+  id: 1,
+  priority: 1,
+  action: {
+    type: declarativeNetRequest.RuleActionType.MODIFY_HEADERS,
+    responseHeaders: [
+      {header: 'x-frame-options', operation: declarativeNetRequest.HeaderOperation.REMOVE},
+      {header: 'frame-options', operation: declarativeNetRequest.HeaderOperation.REMOVE},
+    ],
+  },
+  condition: {
+    urlFilter: '*://*/*',
+    resourceTypes: [declarativeNetRequest.ResourceType.SUB_FRAME],
+  },
+}];
 
-  for (let i = headers.length - 1; i >= 0; --i) {
-    header = headers[i].name.toLowerCase();
-    if (header === 'x-frame-options' || header === 'frame-options') {
-      headers.splice(i, 1); // Remove header
-    }
-  }
-  return {
-    responseHeaders: headers,
-  }
-}, {
-  urls: URLS,
-  types: ['sub_frame'],
-  // }, ['blocking', 'responseHeaders']);
+declarativeNetRequest.updateDynamicRules({
+  removeRuleIds: [1],
+  addRules: rules,
 });
-
-// runtime.onStartup.addListener(() => {
-  // createContextMenu();
-// });
 
 contextMenus.onClicked.addListener(info => {
   if (info.menuItemId === 'open-horizontal') {

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extName__",
   "description": "__MSG_extDesc__",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "default_locale": "en",
   "icons": {
     "128": "icon-128.png",
@@ -20,7 +20,6 @@
     "tabs",
     "contextMenus",
     "storage",
-    "webRequest",
-    "declarativeNetRequest"
+    "declarativeNetRequestWithHostAccess"
   ]
 }
