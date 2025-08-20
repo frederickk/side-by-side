@@ -3,7 +3,7 @@ Side|Side
 
 ## Load sites—side by side
 
-**v0.7.0**
+**v0.8.0**
 
 [Install Extension for Chrome](https://chrome.google.com/webstore/detail/side-by-side/bobidkladfnoamglfgpnllbkhjlhjlfb)
 
